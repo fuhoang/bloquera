@@ -28,7 +28,7 @@ export default function HomePage() {
         <SoftAurora />
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center px-6 pb-16 pt-18 text-center lg:pb-24 lg:pt-24">
           <div className="relative z-10 max-w-5xl">
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
               Learn Bitcoin the easy way.
             </h1>
             <p className="mt-5 text-base leading-8 text-zinc-400 sm:text-lg">
