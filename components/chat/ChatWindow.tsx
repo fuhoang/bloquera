@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { useChat } from "@/hooks/useChat";
 import type { ChatMessage } from "@/types/chat";
@@ -9,6 +9,15 @@ import { cn } from "@/lib/utils";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+
+const SEEDED_MESSAGES: ChatMessage[] = [
+  {
+    id: "welcome",
+    role: "assistant",
+    content:
+      "Ask anything about Bitcoin and I will explain it with simple language and concrete examples.",
+  },
+];
 
 export function ChatWindow({
   className,
@@ -21,18 +30,7 @@ export function ChatWindow({
   submittedPromptVersion?: number;
   onClose?: () => void;
 }) {
-  const seededMessages = useMemo<ChatMessage[]>(
-    () => [
-      {
-        id: "welcome",
-        role: "assistant",
-        content:
-          "Ask anything about Bitcoin and I will explain it with simple language and concrete examples.",
-      },
-    ],
-    [],
-  );
-  const { messages, isLoading, sendMessage } = useChat(seededMessages);
+  const { messages, isLoading, error, sendMessage } = useChat(SEEDED_MESSAGES);
   const lastSubmittedPromptVersion = useRef(0);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -83,6 +81,11 @@ export function ChatWindow({
         {isLoading ? (
           <div className="max-w-[85%] rounded-3xl border border-white/10 bg-black px-4 py-3 text-sm leading-7 text-white">
             Thinking...
+          </div>
+        ) : null}
+        {error ? (
+          <div className="max-w-[85%] rounded-3xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm leading-7 text-red-100">
+            {error}
           </div>
         ) : null}
         <div ref={bottomRef} />

@@ -1,0 +1,110 @@
+import { fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
+
+import HomePage from "@/components/home/HomePage";
+
+vi.mock("next/link", () => ({
+  default: ({
+    children,
+    href,
+    ...props
+  }: {
+    children: ReactNode;
+    href: string;
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
+}));
+
+vi.mock("@/components/home/SoftAurora", () => ({
+  SoftAurora: () => <div data-testid="soft-aurora" />,
+}));
+
+vi.mock("@/components/chat/ChatWindow", () => ({
+  ChatWindow: ({
+    submittedPrompt,
+    submittedPromptVersion,
+  }: {
+    submittedPrompt?: string;
+    submittedPromptVersion?: number;
+  }) => (
+    <div
+      data-prompt={submittedPrompt ?? ""}
+      data-prompt-version={submittedPromptVersion ?? 0}
+      data-testid="chat-window"
+    >
+      <span>{submittedPrompt}</span>
+      <span>{submittedPromptVersion}</span>
+    </div>
+  ),
+}));
+
+describe("HomePage", () => {
+  it("renders the hero content and primary links", () => {
+    render(<HomePage />);
+
+    expect(
+      screen.getByRole("heading", { name: "Learn Bitcoin the easy way." }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Simple lessons. Clear explanations. Step by step."),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Start free" })).toHaveAttribute(
+      "href",
+      "/auth/register",
+    );
+    expect(
+      screen.getByRole("link", { name: "View curriculum" }),
+    ).toHaveAttribute("href", "/#curriculum");
+  });
+
+  it("keeps the conversation idle when the prompt is empty", () => {
+    render(<HomePage />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Ask" }));
+
+    expect(screen.getByTestId("chat-window")).toHaveAttribute("data-prompt", "");
+    expect(screen.getByTestId("chat-window")).toHaveAttribute(
+      "data-prompt-version",
+      "0",
+    );
+  });
+
+  it("opens the conversation with the submitted prompt when clicking Ask", () => {
+    render(<HomePage />);
+
+    fireEvent.change(screen.getByPlaceholderText("Ask anything about bitcoin..."), {
+      target: { value: "Explain Bitcoin simply" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Ask" }));
+
+    expect(screen.getByTestId("chat-window")).toBeInTheDocument();
+    expect(screen.getByText("Explain Bitcoin simply")).toBeInTheDocument();
+  });
+
+  it("opens the conversation when pressing Enter in the prompt", () => {
+    render(<HomePage />);
+
+    fireEvent.change(screen.getByPlaceholderText("Ask anything about bitcoin..."), {
+      target: { value: "What gives Bitcoin value?" },
+    });
+    fireEvent.keyDown(screen.getByPlaceholderText("Ask anything about bitcoin..."), {
+      key: "Enter",
+    });
+
+    expect(screen.getByTestId("chat-window")).toBeInTheDocument();
+    expect(screen.getByText("What gives Bitcoin value?")).toBeInTheDocument();
+  });
+
+  it("renders the curriculum modules and pricing plans", () => {
+    render(<HomePage />);
+
+    expect(screen.getByText("Bitcoin Basics")).toBeInTheDocument();
+    expect(screen.getByText("Wallets & Security")).toBeInTheDocument();
+    expect(screen.getByText("Transactions & Mining")).toBeInTheDocument();
+    expect(screen.getByText("Monthly plan")).toBeInTheDocument();
+    expect(screen.getByText("Yearly plan")).toBeInTheDocument();
+  });
+});
