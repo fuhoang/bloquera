@@ -1,32 +1,104 @@
 const modules = [
   {
-    title: "Bitcoin Basics",
+    title: "Foundations",
     description:
-      "Start with the foundations and build a clear understanding of what Bitcoin is.",
+      "Understand the basics before anything else",
     lessons: [
       "What is money?",
+      "The problem with traditional money",
       "What is Bitcoin?",
+      "Who created Bitcoin?",
       "Why does Bitcoin matter?",
     ],
   },
   {
-    title: "Wallets & Safety",
+    title: "Core Concepts",
     description:
-      "Learn how to protect yourself, understand wallets, and avoid common mistakes.",
+      "Build real understanding",
     lessons: [
-      "What is a wallet?",
-      "Private keys and seed phrases",
-      "Common scams to avoid",
+      "How Bitcoin works (simple view)",
+      "The blockchain explained",
+      "What makes Bitcoin secure?",
+      "Why Bitcoin is scarce (21 million)",
+      "Decentralisation explained",
     ],
   },
   {
-    title: "How Bitcoin Works",
+    title: "Wallets & Ownership",
     description:
-      "Go deeper into transactions, mining, and the ideas that keep the network running.",
+      "This is where most people get confused",
+    lessons: [
+      "What is a Bitcoin wallet?",
+      "Custodial vs non-custodial wallets",
+      "Private keys explained",
+      "Seed phrases (very important)",
+      "How to store Bitcoin safely",
+    ],
+  },
+  {
+    title: "Transactions",
+    description: "How Bitcoin actually moves",
     lessons: [
       "How transactions work",
+      "What are fees?",
+      "Confirmations explained",
+      "Sending and receiving Bitcoin",
+      "Common transaction mistakes",
+    ],
+  },
+  {
+    title: "Mining & Network",
+    description: "What keeps Bitcoin running",
+    lessons: [
       "What is mining?",
-      "Why Bitcoin is scarce",
+      "Proof of Work explained",
+      "Why miners exist",
+      "Difficulty and hash rate",
+      "Energy and Bitcoin (simple explanation)",
+    ],
+  },
+  {
+    title: "Safety & Mistakes",
+    description: "Critical for beginners",
+    lessons: [
+      "Common Bitcoin scams",
+      "How people lose Bitcoin",
+      "Exchange risks",
+      "Phishing and fake apps",
+      "Safety checklist",
+    ],
+  },
+  {
+    title: "Real World Use",
+    description: "Make it practical",
+    lessons: [
+      "How to buy Bitcoin",
+      "Where to buy (exchanges vs P2P)",
+      "Using Bitcoin in daily life",
+      "Storing vs spending",
+      "Long-term thinking",
+    ],
+  },
+  {
+    title: "Advanced Basics (still beginner-friendly)",
+    description: "Level up understanding",
+    lessons: [
+      "Nodes explained",
+      "Lightning Network (simple)",
+      "Hard forks vs soft forks",
+      "Bitcoin vs other crypto",
+      "Why Bitcoin is different",
+    ],
+  },
+  {
+    title: "Mindset & Strategy",
+    description: "This is what most people miss",
+    lessons: [
+      "Volatility explained",
+      "Long-term vs short-term thinking",
+      "Emotional mistakes beginners make",
+      "Why people panic sell",
+      "Building conviction",
     ],
   },
 ] as const;
@@ -68,9 +140,7 @@ export default function LearnPage() {
                 key={module.title}
                 className="rounded-3xl border border-white/10 bg-white/[0.03] p-6"
               >
-                <p className="text-sm text-zinc-500">
-                  Module 0{moduleIndex + 1}
-                </p>
+                <p className="text-sm text-zinc-500">Module 0{moduleIndex + 1}</p>
                 <h2 className="mt-4 text-2xl font-semibold tracking-tight text-white">
                   {module.title}
                 </h2>
