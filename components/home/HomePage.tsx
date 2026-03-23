@@ -1,10 +1,59 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { SoftAurora } from "@/components/home/SoftAurora";
-import { Button } from "@/components/ui/Button";
+
+const MODULES = [
+  {
+    title: "Bitcoin Basics",
+    description: "Understand what Bitcoin is, why it exists, and why it matters.",
+    eyebrow: "Start here",
+    accent: "from-amber-400/25 via-orange-500/10 to-transparent",
+    border: "border-amber-400/25",
+    cta: "Explore basics",
+    href: "/learn",
+  },
+  {
+    title: "Wallets & Security",
+    description: "Learn self-custody, scams, and safe first steps.",
+    eyebrow: "Stay safe",
+    accent: "from-emerald-400/25 via-cyan-500/10 to-transparent",
+    border: "border-emerald-400/25",
+    cta: "Learn security",
+    href: "/learn",
+  },
+  {
+    title: "Transactions & Mining",
+    description: "Learn how Bitcoin moves and how the network stays secure.",
+    eyebrow: "Go deeper",
+    accent: "from-sky-400/25 via-indigo-500/10 to-transparent",
+    border: "border-sky-400/25",
+    cta: "See the network",
+    href: "/learn",
+  },
+] as const;
+
+const PRICING_PLANS = [
+  {
+    name: "Monthly plan",
+    price: "GBP12",
+    cadence: "/month",
+    description:
+      "Full curriculum, more AI usage, quizzes, progress tracking, and deeper security lessons.",
+    footnote: null,
+  },
+  {
+    name: "Yearly plan",
+    price: "GBP120",
+    cadence: "/year",
+    description:
+      "Full curriculum, more AI usage, quizzes, progress tracking, and deeper security lessons with a fixed annual price.",
+    footnote: "Save compared with the monthly plan.",
+  },
+] as const;
 
 export default function HomePage() {
   const [prompt, setPrompt] = useState("");
@@ -13,33 +62,6 @@ export default function HomePage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [panelHeight, setPanelHeight] = useState(560);
   const demoRef = useRef<HTMLDivElement | null>(null);
-
-  const modules = [
-    {
-      title: "Bitcoin Basics",
-      description: "Understand what Bitcoin is, why it exists, and why it matters.",
-      eyebrow: "Start here",
-      accent: "from-amber-400/25 via-orange-500/10 to-transparent",
-      border: "border-amber-400/25",
-      button: "Explore basics",
-    },
-    {
-      title: "Wallets & Security",
-      description: "Learn self-custody, scams, and safe first steps.",
-      eyebrow: "Stay safe",
-      accent: "from-emerald-400/25 via-cyan-500/10 to-transparent",
-      border: "border-emerald-400/25",
-      button: "Learn security",
-    },
-    {
-      title: "Transactions & Mining",
-      description: "Learn how Bitcoin moves and how the network stays secure.",
-      eyebrow: "Go deeper",
-      accent: "from-sky-400/25 via-indigo-500/10 to-transparent",
-      border: "border-sky-400/25",
-      button: "See the network",
-    },
-  ];
 
   function openConversation() {
     const trimmedPrompt = prompt.trim();
@@ -55,28 +77,36 @@ export default function HomePage() {
   }
 
   useEffect(() => {
+    const demoElement = demoRef.current;
+    const headerElement = document.querySelector<HTMLElement>("header");
+
+    if (
+      !(demoElement instanceof HTMLDivElement) ||
+      !(headerElement instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    const demoNode: HTMLDivElement = demoElement;
+    const headerNode: HTMLElement = headerElement;
+
     function syncPanelHeight() {
-      if (!demoRef.current) {
-        return;
-      }
-
-      const demoRect = demoRef.current.getBoundingClientRect();
-      const headerRect = document
-        .querySelector("header")
-        ?.getBoundingClientRect();
-
-      if (!headerRect) {
-        return;
-      }
+      const demoRect = demoNode.getBoundingClientRect();
+      const headerRect = headerNode.getBoundingClientRect();
 
       const availableHeight = demoRect.top - headerRect.bottom - 12;
       setPanelHeight(Math.max(240, Math.round(availableHeight)));
     }
 
     syncPanelHeight();
+
+    const observer = new ResizeObserver(syncPanelHeight);
+    observer.observe(demoNode);
+    observer.observe(headerNode);
     window.addEventListener("resize", syncPanelHeight);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", syncPanelHeight);
     };
   }, []);
@@ -95,12 +125,18 @@ export default function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:justify-center">
-              <button className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400">
+              <Link
+                href="/auth/register"
+                className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400"
+              >
                 Start free
-              </button>
-              <button className="rounded-xl border border-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/5">
+              </Link>
+              <Link
+                href="/#curriculum"
+                className="rounded-xl border border-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/5"
+              >
                 View curriculum
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -173,7 +209,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {modules.map((module, index) => (
+            {MODULES.map((module, index) => (
               <div
                 key={module.title}
                 className={`group relative flex h-full overflow-hidden rounded-[1.75rem] border bg-black p-6 text-left transition-transform duration-200 hover:-translate-y-1 ${module.border}`}
@@ -188,16 +224,19 @@ export default function HomePage() {
                       {module.eyebrow}
                     </span>
                   </div>
-                <h3 className="mt-4 text-xl font-semibold text-white">
-                  {module.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-zinc-400">
-                  {module.description}
-                </p>
+                  <h3 className="mt-4 text-xl font-semibold text-white">
+                    {module.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-zinc-400">
+                    {module.description}
+                  </p>
                   <div className="mt-auto pt-6">
-                    <Button className="w-full rounded-xl bg-orange-500 px-5 py-3 text-black shadow-none hover:bg-orange-400">
-                      {module.button}
-                    </Button>
+                    <Link
+                      href={module.href}
+                      className="inline-flex w-full items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black shadow-none transition hover:bg-orange-400"
+                    >
+                      {module.cta}
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -221,58 +260,34 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto mt-10 grid max-w-4xl gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <p className="text-sm text-zinc-500">Monthly plan</p>
-              <p className="mt-3 text-4xl font-semibold text-white">
-                GBP12
-                <span className="text-base font-normal text-zinc-400">
-                  /month
-                </span>
-              </p>
-              <p className="mt-4 text-sm leading-7 text-zinc-400">
-                Full curriculum, more AI usage, quizzes, progress tracking, and
-                deeper security lessons.
-              </p>
-              <button className="mt-6 w-full rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400">
-                Buy Now
-              </button>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <p className="text-sm text-zinc-500">Yearly plan</p>
-              <p className="mt-3 text-4xl font-semibold text-white">
-                GBP120
-                <span className="text-base font-normal text-zinc-400">
-                  /year
-                </span>
-              </p>
-              <p className="mt-4 text-sm leading-7 text-zinc-400">
-                Full curriculum, more AI usage, quizzes, progress tracking, and
-                deeper security lessons with a fixed annual price.
-              </p>
-              <button className="mt-6 w-full rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400">
-                Buy Now
-              </button>
-              <p className="mt-3 text-center text-xs text-zinc-500">
-                Save compared with the monthly plan.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-white/10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-sm text-zinc-500 md:flex-row md:items-center md:justify-between">
-          <p>(c) 2026 Satoshi learn</p>
-          <div className="flex gap-5">
-            <a href="#" className="transition hover:text-white">
-              Privacy
-            </a>
-            <a href="#" className="transition hover:text-white">
-              Terms
-            </a>
-            <a href="#" className="transition hover:text-white">
-              Contact
-            </a>
+            {PRICING_PLANS.map((plan) => (
+              <div
+                key={plan.name}
+                className="rounded-2xl border border-white/10 bg-white/5 p-6"
+              >
+                <p className="text-sm text-zinc-500">{plan.name}</p>
+                <p className="mt-3 text-4xl font-semibold text-white">
+                  {plan.price}
+                  <span className="text-base font-normal text-zinc-400">
+                    {plan.cadence}
+                  </span>
+                </p>
+                <p className="mt-4 text-sm leading-7 text-zinc-400">
+                  {plan.description}
+                </p>
+                <Link
+                  href="/pricing"
+                  className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400"
+                >
+                  Buy Now
+                </Link>
+                {plan.footnote ? (
+                  <p className="mt-3 text-center text-xs text-zinc-500">
+                    {plan.footnote}
+                  </p>
+                ) : null}
+              </div>
+            ))}
           </div>
         </div>
       </section>
