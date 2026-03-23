@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { SoftAurora } from "@/components/home/SoftAurora";
+import { Button } from "@/components/ui/Button";
 
 export default function HomePage() {
   const [prompt, setPrompt] = useState("");
@@ -17,14 +18,26 @@ export default function HomePage() {
     {
       title: "Bitcoin Basics",
       description: "Understand what Bitcoin is, why it exists, and why it matters.",
+      eyebrow: "Start here",
+      accent: "from-amber-400/25 via-orange-500/10 to-transparent",
+      border: "border-amber-400/25",
+      button: "Explore basics",
     },
     {
       title: "Wallets & Security",
       description: "Learn self-custody, scams, and safe first steps.",
+      eyebrow: "Stay safe",
+      accent: "from-emerald-400/25 via-cyan-500/10 to-transparent",
+      border: "border-emerald-400/25",
+      button: "Learn security",
     },
     {
       title: "Transactions & Mining",
       description: "Learn how Bitcoin moves and how the network stays secure.",
+      eyebrow: "Go deeper",
+      accent: "from-sky-400/25 via-indigo-500/10 to-transparent",
+      border: "border-sky-400/25",
+      button: "See the network",
     },
   ];
 
@@ -163,15 +176,30 @@ export default function HomePage() {
             {modules.map((module, index) => (
               <div
                 key={module.title}
-                className="rounded-2xl border border-white/10 p-6"
+                className={`group relative flex h-full overflow-hidden rounded-[1.75rem] border bg-black p-6 text-left transition-transform duration-200 hover:-translate-y-1 ${module.border}`}
               >
-                <p className="text-sm text-zinc-500">Module 0{index + 1}</p>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${module.accent} opacity-80 transition-opacity duration-200 group-hover:opacity-100`}
+                />
+                <div className="relative flex h-full flex-1 flex-col">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-zinc-400">Module 0{index + 1}</p>
+                    <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-zinc-300">
+                      {module.eyebrow}
+                    </span>
+                  </div>
                 <h3 className="mt-4 text-xl font-semibold text-white">
                   {module.title}
                 </h3>
                 <p className="mt-3 text-sm leading-7 text-zinc-400">
                   {module.description}
                 </p>
+                  <div className="mt-auto pt-6">
+                    <Button className="w-full rounded-xl bg-orange-500 px-5 py-3 text-black shadow-none hover:bg-orange-400">
+                      {module.button}
+                    </Button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
