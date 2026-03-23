@@ -5,7 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-black text-white">
       <Navbar />
       <main className="mx-auto max-w-7xl">{children}</main>
       <Footer />
