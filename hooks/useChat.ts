@@ -12,23 +12,26 @@ const welcomeMessage: ChatMessage = {
 };
 
 export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    ...initialMessages,
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([...initialMessages]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const sendMessage = useCallback(async (content: string) => {
-    if (!content.trim()) {
+    const trimmedContent = content.trim();
+
+    if (!trimmedContent) {
       return;
     }
 
+    const timestamp = Date.now();
     const userMessage: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: `user-${timestamp}`,
       role: "user",
-      content,
+      content: trimmedContent,
     };
 
     setMessages((current) => [...current, userMessage]);
+    setError(null);
     setIsLoading(true);
 
     try {
@@ -37,23 +40,39 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: content }),
+        body: JSON.stringify({ message: trimmedContent }),
       });
 
-      const data = (await response.json()) as { reply: string };
+      const data = (await response.json()) as {
+        error?: string;
+        reply?: string;
+      };
+
+      if (!response.ok || !data.reply) {
+        throw new Error(data.error ?? "Unable to get a tutor response right now.");
+      }
+
+      const reply = data.reply;
 
       setMessages((current) => [
         ...current,
         {
-          id: `assistant-${Date.now()}`,
+          id: `assistant-${timestamp + 1}`,
           role: "assistant",
-          content: data.reply,
+          content: reply,
         },
       ]);
+    } catch (caughtError) {
+      const message =
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Unable to get a tutor response right now.";
+
+      setError(message);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  return { messages, isLoading, sendMessage };
+  return { messages, isLoading, error, sendMessage };
 }

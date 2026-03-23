@@ -7,32 +7,31 @@ import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
 
+type NavLink = {
+  href: Route | "/#curriculum" | "/#demo" | "/#pricing";
+  label: string;
+};
+
+const HOME_NAV_LINKS = [
+  { href: "/#curriculum", label: "Curriculum" },
+  { href: "/#demo", label: "Demo" },
+  { href: "/#pricing", label: "Pricing" },
+] satisfies NavLink[];
+
+const APP_NAV_LINKS = [
+  { href: "/pricing", label: "Pricing" },
+  { href: "/learn", label: "Curriculum" },
+  { href: "/dashboard", label: "Dashboard" },
+] satisfies NavLink[];
+
 export function Navbar() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  type NavLink = {
-    href: Route | "/#curriculum" | "/#demo" | "/#pricing";
-    label: string;
-  };
-
-  const homeNavLinks = [
-    { href: "/#curriculum", label: "Curriculum" },
-    { href: "/#demo", label: "Demo" },
-    { href: "/#pricing", label: "Pricing" },
-  ] satisfies NavLink[];
-
-  const appNavLinks = [
-    { href: "/pricing", label: "Pricing" },
-    { href: "/learn", label: "Curriculum" },
-    { href: "/dashboard", label: "Dashboard" },
-  ] satisfies NavLink[];
-
-  const navLinks = isHomePage ? homeNavLinks : appNavLinks;
+  const navLinks = isHomePage ? HOME_NAV_LINKS : APP_NAV_LINKS;
 
   return (
-    <header className="sticky top-0 z-0 border-b border-white/10 bg-black/90 text-white backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-black/90 text-white backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-4 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center">
         <div className="flex items-center justify-between md:hidden">
           <Link
@@ -40,10 +39,7 @@ export function Navbar() {
             className="flex items-end justify-center gap-2"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span
-              className="text-center text-xl uppercase tracking-[0.08em] text-white sm:text-2xl"
-              style={{ fontFamily: '"Bungee", cursive' }}
-            >
+            <span className="text-center text-xl uppercase tracking-[0.08em] text-white [font-family:var(--font-bungee)] sm:text-2xl">
               Satoshi Learn
             </span>
             <span
@@ -54,6 +50,7 @@ export function Navbar() {
             </span>
           </Link>
           <button
+            aria-controls="mobile-navigation"
             aria-expanded={isMenuOpen}
             aria-label="Toggle navigation menu"
             className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/5"
@@ -89,10 +86,7 @@ export function Navbar() {
           href="/"
           className="hidden items-end justify-center gap-2 md:flex md:justify-self-center"
         >
-          <span
-            className="text-center text-xl uppercase tracking-[0.08em] text-white sm:text-2xl md:text-3xl"
-            style={{ fontFamily: '"Bungee", cursive' }}
-          >
+          <span className="text-center text-xl uppercase tracking-[0.08em] text-white [font-family:var(--font-bungee)] sm:text-2xl md:text-3xl">
             Satoshi Learn
           </span>
           <span
@@ -114,7 +108,10 @@ export function Navbar() {
         </div>
 
         {isMenuOpen ? (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-4 md:hidden">
+          <div
+            id="mobile-navigation"
+            className="rounded-3xl border border-white/10 bg-white/5 p-4 md:hidden"
+          >
             <nav className="flex flex-col gap-3 text-sm text-zinc-300">
               {navLinks.map((link) => (
                 <Link
