@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,17 +12,24 @@ export function Navbar() {
   const isHomePage = pathname === "/";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navLinks = isHomePage
-    ? [
-        { href: "/#curriculum", label: "Curriculum" },
-        { href: "/#demo", label: "Demo" },
-        { href: "/#pricing", label: "Pricing" },
-      ]
-    : [
-        { href: "/pricing", label: "Pricing" },
-        { href: "/learn", label: "Curriculum" },
-        { href: "/dashboard", label: "Dashboard" },
-      ];
+  type NavLink = {
+    href: Route | "/#curriculum" | "/#demo" | "/#pricing";
+    label: string;
+  };
+
+  const homeNavLinks = [
+    { href: "/#curriculum", label: "Curriculum" },
+    { href: "/#demo", label: "Demo" },
+    { href: "/#pricing", label: "Pricing" },
+  ] satisfies NavLink[];
+
+  const appNavLinks = [
+    { href: "/pricing", label: "Pricing" },
+    { href: "/learn", label: "Curriculum" },
+    { href: "/dashboard", label: "Dashboard" },
+  ] satisfies NavLink[];
+
+  const navLinks = isHomePage ? homeNavLinks : appNavLinks;
 
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-black/90 text-white backdrop-blur">
