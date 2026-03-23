@@ -1,3 +1,5 @@
+import { SoftAurora } from "@/components/home/SoftAurora";
+
 export default function HomePage() {
   const prompts = [
     "Explain Bitcoin like I'm a complete beginner",
@@ -21,20 +23,16 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white">
-      <section>
-        <div className="mx-auto flex max-w-3xl flex-col items-center px-6 pb-16 pt-18 text-center lg:pb-24 lg:pt-24">
-          <div>
-            <p className="text-sm text-zinc-500">
-              Structured curriculum with an AI tutor
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-              Learn Bitcoin clearly, one lesson at a time.
+    <main className="min-h-screen overflow-x-hidden bg-zinc-950 text-white">
+      <section className="relative overflow-hidden">
+        <SoftAurora />
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center px-6 pb-16 pt-18 text-center lg:pb-24 lg:pt-24">
+          <div className="relative z-10 max-w-5xl">
+            <h1 className="mt-4 text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Learn Bitcoin the easy way.
             </h1>
             <p className="mt-5 text-base leading-8 text-zinc-400 sm:text-lg">
-              Satoshi learn combines guided lessons with contextual AI prompts
-              so beginners can understand Bitcoin without hype, clutter, or
-              unsafe advice.
+              Simple lessons. Clear explanations. Step by step.
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:justify-center">
@@ -49,7 +47,7 @@ export default function HomePage() {
 
           <div
             id="demo"
-            className="mt-12 w-full max-w-md rounded-3xl border border-white/10 bg-zinc-900 p-5"
+            className="relative z-10 mt-12 w-full max-w-2xl rounded-3xl border border-white/10 bg-zinc-900/80 p-5 backdrop-blur"
           >
             <div className="border-b border-white/10 pb-4">
               <p className="text-sm font-medium text-white">AI lesson demo</p>

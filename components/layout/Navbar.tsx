@@ -11,7 +11,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-black/90 text-white backdrop-blur">
-      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-4 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center">
         <nav className="hidden items-center gap-6 justify-self-start text-sm text-zinc-400 md:flex">
           {isHomePage ? (
             <>
@@ -29,10 +29,10 @@ export function Navbar() {
         </nav>
         <Link
           href="/"
-          className="flex items-end justify-center gap-2 justify-self-center"
+          className="flex items-end justify-center gap-2 md:justify-self-center"
         >
           <span
-            className="text-5xl uppercase tracking-[0.1em] text-white"
+            className="text-center text-3xl uppercase tracking-[0.08em] text-white sm:text-4xl md:text-5xl"
             style={{ fontFamily: '"Bungee", cursive' }}
           >
             Satoshi Learn
@@ -44,7 +44,7 @@ export function Navbar() {
             ₿
           </span>
         </Link>
-        <div className="flex items-center gap-3 justify-self-end">
+        <div className="flex items-center justify-center gap-3 md:justify-self-end">
           <Link href="/auth/login" className="text-sm font-medium text-zinc-300">
             Log in
           </Link>
