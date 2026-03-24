@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { lessonConfig } from "@/content/config";
-import type { Lesson } from "@/types/lesson";
+import { lessonConfig, moduleConfig } from "@/content/config";
+import type { Lesson, ModuleMeta } from "@/types/lesson";
 
 const lessonsDir = path.join(process.cwd(), "content", "lessons");
 
@@ -12,6 +12,10 @@ function stripFrontmatter(source: string) {
 
 export function getLessons() {
   return [...lessonConfig].sort((a, b) => a.order - b.order);
+}
+
+export function getModules() {
+  return [...moduleConfig].sort((a, b) => a.order - b.order);
 }
 
 export function getLessonBySlug(slug: string): Lesson | null {
@@ -27,6 +31,10 @@ export function getLessonBySlug(slug: string): Lesson | null {
     ...meta,
     body: stripFrontmatter(source),
   };
+}
+
+export function getModuleBySlug(slug: string): ModuleMeta | null {
+  return moduleConfig.find((module) => module.slug === slug) ?? null;
 }
 
 export function getAdjacentLessons(slug: string) {

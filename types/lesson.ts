@@ -10,3 +10,11 @@ export interface LessonMeta {
 export interface Lesson extends LessonMeta {
   body: string;
 }
+
+export interface ModuleMeta {
+  slug: string;
+  title: string;
+  description: string;
+  order: number;
+  lessons: LessonMeta[];
+}

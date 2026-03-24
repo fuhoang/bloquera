@@ -1,4 +1,4 @@
-import type { LessonMeta } from "@/types/lesson";
+import type { LessonMeta, ModuleMeta } from "@/types/lesson";
 
 export const lessonConfig: LessonMeta[] = [
   {
@@ -369,3 +369,61 @@ export const lessonConfig: LessonMeta[] = [
     order: 46,
   },
 ];
+
+const moduleDefinitions = [
+  {
+    slug: "foundations",
+    title: "Foundations",
+    description: "Understand the basics before anything else",
+  },
+  {
+    slug: "core-concepts",
+    title: "Core Concepts",
+    description: "Build real understanding",
+  },
+  {
+    slug: "wallets-and-ownership",
+    title: "Wallets & Ownership",
+    description: "This is where most people get confused",
+  },
+  {
+    slug: "transactions",
+    title: "Transactions",
+    description: "How Bitcoin actually moves",
+  },
+  {
+    slug: "mining-and-network",
+    title: "Mining & Network",
+    description: "What keeps Bitcoin running",
+  },
+  {
+    slug: "safety-and-mistakes",
+    title: "Safety & Mistakes",
+    description: "Critical for beginners",
+  },
+  {
+    slug: "real-world-use",
+    title: "Real World Use",
+    description: "Make it practical",
+  },
+  {
+    slug: "advanced-basics",
+    title: "Advanced Basics",
+    description: "Level up understanding",
+  },
+  {
+    slug: "mindset-and-strategy",
+    title: "Mindset & Strategy",
+    description: "This is what most people miss",
+  },
+] as const;
+
+export const moduleConfig: ModuleMeta[] = moduleDefinitions.map(
+  (module, index) => ({
+    ...module,
+    order: index + 1,
+    lessons: lessonConfig
+      .filter((lesson) => lesson.section === module.title)
+      .sort((a, b) => a.order - b.order),
+  }),
+);
