@@ -135,22 +135,40 @@ const modules = [
     title: "Real World Use",
     description: "Make it practical",
     lessons: [
-      { title: "How to buy Bitcoin", href: "/learn/what-is-bitcoin" },
-      { title: "Where to buy (exchanges vs P2P)", href: "/learn/what-is-bitcoin" },
-      { title: "Using Bitcoin in daily life", href: "/learn/transactions" },
-      { title: "Storing vs spending", href: "/learn/wallets" },
-      { title: "Long-term thinking", href: "/learn/what-is-money" },
+      { title: "How to buy Bitcoin", href: "/learn/how-to-buy-bitcoin" },
+      {
+        title: "Where to buy (exchanges vs P2P)",
+        href: "/learn/where-to-buy-bitcoin",
+      },
+      {
+        title: "Using Bitcoin in daily life",
+        href: "/learn/using-bitcoin-in-daily-life",
+      },
+      { title: "Storing vs spending", href: "/learn/storing-vs-spending" },
+      { title: "Long-term thinking", href: "/learn/long-term-thinking" },
     ],
   },
   {
     title: "Advanced Basics (still beginner-friendly)",
     description: "Level up understanding",
     lessons: [
-      { title: "Nodes explained", href: "/learn/what-is-bitcoin" },
-      { title: "Lightning Network (simple)", href: "/learn/transactions" },
-      { title: "Hard forks vs soft forks", href: "/learn/what-is-bitcoin" },
-      { title: "Bitcoin vs other crypto", href: "/learn/what-is-bitcoin" },
-      { title: "Why Bitcoin is different", href: "/learn/what-is-bitcoin" },
+      { title: "Nodes explained", href: "/learn/nodes-explained" },
+      {
+        title: "Lightning Network (simple)",
+        href: "/learn/lightning-network-simple",
+      },
+      {
+        title: "Hard forks vs soft forks",
+        href: "/learn/hard-forks-vs-soft-forks",
+      },
+      {
+        title: "Bitcoin vs other crypto",
+        href: "/learn/bitcoin-vs-other-crypto",
+      },
+      {
+        title: "Why Bitcoin is different",
+        href: "/learn/why-bitcoin-is-different",
+      },
     ],
   },
   {
