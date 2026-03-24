@@ -9,14 +9,17 @@ import { LessonNavigation } from "@/components/lesson/LessonNavigation";
 import { QuizCard } from "@/components/quiz/QuizCard";
 import { QuizResult } from "@/components/quiz/QuizResult";
 import { Button } from "@/components/ui/Button";
+import { useLessonProgress } from "@/hooks/useLessonProgress";
 
 type LessonQuizGateProps = {
+  lessonSlug: string;
   questions: QuizQuestion[];
   previous: LessonMeta | null;
   next: LessonMeta | null;
 };
 
 export function LessonQuizGate({
+  lessonSlug,
   questions,
   previous,
   next,
@@ -24,6 +27,10 @@ export function LessonQuizGate({
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [checked, setChecked] = useState(false);
   const [passed, setPassed] = useState(false);
+  const [skipped, setSkipped] = useState(false);
+  const { isLessonCompleted, markLessonCompleted } = useLessonProgress();
+  const completed = isLessonCompleted(lessonSlug);
+  const quizPassed = completed || passed;
 
   const correctCount = useMemo(
     () =>
@@ -37,16 +44,23 @@ export function LessonQuizGate({
   function handleSelect(questionId: string, answer: string) {
     setAnswers((current) => ({ ...current, [questionId]: answer }));
     setChecked(false);
-    setPassed(false);
+    if (!completed) {
+      setPassed(false);
+    }
+    setSkipped(false);
   }
 
   function handleCheckAnswers() {
-    const allCorrect = questions.every(
-      (question) => answers[question.id] === question.correctAnswer,
-    );
+    const minimumCorrect = Math.max(2, questions.length - 1);
+    const allCorrect = correctCount >= minimumCorrect;
 
     setChecked(true);
     setPassed(allCorrect);
+    setSkipped(false);
+
+    if (allCorrect) {
+      markLessonCompleted(lessonSlug);
+    }
   }
 
   return (
@@ -60,8 +74,8 @@ export function LessonQuizGate({
             Answer every question correctly to unlock the next lesson.
           </h2>
           <p className="mt-3 text-sm leading-7 text-zinc-400">
-            Each lesson includes a short multiple-choice check so the learner has
-            to confirm understanding before moving forward.
+            Each lesson includes a short multiple-choice check. Pass the quiz to
+            mark the lesson complete, or skip ahead and come back later.
           </p>
         </div>
         <div className="space-y-6">
@@ -84,17 +98,34 @@ export function LessonQuizGate({
             type="button"
             variant="primary"
           >
-            {passed
-              ? "Quiz passed"
+            {quizPassed
+              ? "Lesson completed"
               : allAnswered
                 ? "Check answers"
                 : `Answer all ${questions.length} questions`}
           </Button>
+          {next ? (
+            <button
+              className="mt-3 w-full rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white"
+              onClick={() => setSkipped(true)}
+              type="button"
+            >
+              Skip for now
+            </button>
+          ) : null}
         </div>
       </section>
 
-      <QuizResult correct={correctCount} passed={passed} total={questions.length} />
-      <LessonNavigation canProceed={passed} next={next} previous={previous} />
+      <QuizResult
+        correct={correctCount}
+        passed={quizPassed}
+        total={questions.length}
+      />
+      <LessonNavigation
+        canProceed={quizPassed || skipped}
+        next={next}
+        previous={previous}
+      />
     </div>
   );
 }

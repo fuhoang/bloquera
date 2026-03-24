@@ -40,11 +40,11 @@ export function LessonNavigation({
       ) : (
         <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 text-right text-white opacity-60">
           <p className="text-xs uppercase tracking-[0.2em] text-orange-300">
-            Finish the quiz
+            Complete or skip the quiz
           </p>
           <p className="mt-2 text-lg font-semibold">{next.title}</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Answer every question correctly to continue.
+            Pass the quiz to complete this lesson, or skip ahead and come back later.
           </p>
         </div>
       ) : (
