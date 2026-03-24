@@ -1,29 +1,41 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-const protectedPrefixes = ["/dashboard", "/learn", "/lesson"];
+import { isAuthRoute, routeRequiresAuth } from "@/lib/auth";
+import { hasSupabaseEnv } from "@/lib/supabase/config";
+import { updateSupabaseSession } from "@/lib/supabase/proxy";
 
 export function proxy(request: NextRequest) {
+  return handleProxy(request);
+}
+
+async function handleProxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const requiresAuth = protectedPrefixes.some((prefix) =>
-    pathname.startsWith(prefix),
-  );
+  let response = NextResponse.next({
+    request,
+  });
 
-  if (!requiresAuth) {
-    return NextResponse.next();
+  if (!hasSupabaseEnv()) {
+    return response;
   }
 
-  const authenticated = request.cookies.get("demo-auth")?.value === "1";
+  const sessionState = await updateSupabaseSession(request, response);
+  response = sessionState.response;
+  const requiresAuth = routeRequiresAuth(pathname);
 
-  if (authenticated) {
-    return NextResponse.next();
+  if (requiresAuth && !sessionState.user) {
+    const loginUrl = new URL("/auth/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  const loginUrl = new URL("/auth/login", request.url);
-  loginUrl.searchParams.set("next", pathname);
-  return NextResponse.redirect(loginUrl);
+  if (isAuthRoute(pathname) && sessionState.user) {
+    return NextResponse.redirect(new URL("/learn", request.url));
+  }
+
+  return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/learn/:path*", "/lesson/:path*"],
+  matcher: ["/dashboard/:path*", "/learn/:path*", "/auth/:path*"],
 };

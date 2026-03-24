@@ -1,0 +1,166 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/Button";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { hasSupabaseEnv } from "@/lib/supabase/config";
+
+type AuthFormProps = {
+  mode: "login" | "register";
+  nextPath: string;
+};
+
+export function AuthForm({ mode, nextPath }: AuthFormProps) {
+  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!supabase) {
+      setError(
+        "Supabase is not configured yet. Add the public URL and anon key to your environment first.",
+      );
+      return;
+    }
+
+    setError(null);
+    setMessage(null);
+    setIsSubmitting(true);
+
+    if (mode === "login") {
+      const { error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (loginError) {
+        setError(loginError.message);
+        setIsSubmitting(false);
+        return;
+      }
+
+      window.location.assign(nextPath);
+      return;
+    }
+
+    const emailRedirectTo = new URL("/auth/callback", window.location.origin);
+    emailRedirectTo.searchParams.set("next", nextPath);
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: emailRedirectTo.toString(),
+      },
+    });
+
+    if (signUpError) {
+      setError(signUpError.message);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (data.session) {
+      window.location.assign(nextPath);
+      return;
+    }
+
+    setMessage(
+      "Account created. Check your email to confirm your address before logging in.",
+    );
+    setIsSubmitting(false);
+  }
+
+  return (
+    <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 text-white">
+      <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
+        {mode === "login" ? "Welcome back" : "Create account"}
+      </p>
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight">
+        {mode === "login" ? "Log in to continue" : "Start your learning account"}
+      </h1>
+      <p className="mt-4 text-sm leading-7 text-zinc-400">
+        {mode === "login"
+          ? "Access your curriculum progress, quiz history, and tutor sessions."
+          : "Create an account so lesson progress and future subscriptions belong to you."}
+      </p>
+
+      {!hasSupabaseEnv() ? (
+        <div className="mt-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm leading-7 text-amber-100">
+          Supabase is not configured yet. Add the values from `.env.example`
+          before using these forms.
+        </div>
+      ) : null}
+
+      <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
+        <label className="block">
+          <span className="text-sm text-zinc-400">Email</span>
+          <input
+            autoComplete="email"
+            className="mt-2 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-500/40"
+            onChange={(event) => setEmail(event.target.value)}
+            required
+            type="email"
+            value={email}
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm text-zinc-400">Password</span>
+          <input
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            className="mt-2 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-500/40"
+            minLength={8}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            type="password"
+            value={password}
+          />
+        </label>
+
+        {error ? (
+          <p className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+            {error}
+          </p>
+        ) : null}
+
+        {message ? (
+          <p className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+            {message}
+          </p>
+        ) : null}
+
+        <Button
+          className="mt-2 w-full bg-orange-500 !text-black hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+          disabled={isSubmitting}
+          type="submit"
+        >
+          {isSubmitting
+            ? mode === "login"
+              ? "Logging in..."
+              : "Creating account..."
+            : mode === "login"
+              ? "Log in"
+              : "Create account"}
+        </Button>
+      </form>
+
+      <p className="mt-6 text-sm text-zinc-500">
+        {mode === "login" ? "Need an account?" : "Already have an account?"}{" "}
+        <Link
+          className="font-medium text-orange-300 transition hover:text-orange-200"
+          href={mode === "login" ? "/auth/register" : "/auth/login"}
+        >
+          {mode === "login" ? "Create one" : "Log in"}
+        </Link>
+      </p>
+    </div>
+  );
+}

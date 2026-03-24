@@ -9,6 +9,7 @@ export function Footer() {
           <Link href="/">Home</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/learn">Curriculum</Link>
+          <Link href="/auth/login">Log in</Link>
         </nav>
       </div>
     </footer>

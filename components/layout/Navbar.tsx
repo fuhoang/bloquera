@@ -16,6 +16,9 @@ const NAV_LINKS = [
   { href: "/#pricing", label: "Pricing" },
 ] satisfies NavLink[];
 
+const BRAND_FONT_STACK =
+  '"Bungee", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -28,7 +31,10 @@ export function Navbar() {
             className="flex items-end justify-center gap-2"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="text-center text-xl uppercase tracking-[0.08em] text-white [font-family:var(--font-bungee)] sm:text-2xl">
+            <span
+              className="text-center text-xl uppercase tracking-[0.08em] text-white sm:text-2xl"
+              style={{ fontFamily: BRAND_FONT_STACK }}
+            >
               Satoshi Learn
             </span>
             <span
@@ -75,7 +81,10 @@ export function Navbar() {
           href="/"
           className="hidden items-end justify-center gap-2 md:flex md:justify-self-center"
         >
-          <span className="text-center text-xl uppercase tracking-[0.08em] text-white [font-family:var(--font-bungee)] sm:text-2xl md:text-3xl">
+          <span
+            className="text-center text-xl uppercase tracking-[0.08em] text-white sm:text-2xl md:text-3xl"
+            style={{ fontFamily: BRAND_FONT_STACK }}
+          >
             Satoshi Learn
           </span>
           <span
@@ -86,6 +95,9 @@ export function Navbar() {
           </span>
         </Link>
         <div className="hidden items-center justify-center gap-3 md:flex md:justify-self-end">
+          <Link href="/auth/login" className="text-sm text-zinc-400 transition hover:text-white">
+            Log in
+          </Link>
           <Link href="/learn">
             <Button className="bg-orange-500 !text-white hover:bg-orange-400 hover:!text-white">
               Start Learning
@@ -110,6 +122,11 @@ export function Navbar() {
               ))}
             </nav>
             <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4">
+              <Link href="/auth/login" onClick={() => setIsMenuOpen(false)}>
+                <Button className="w-full" variant="secondary">
+                  Log in
+                </Button>
+              </Link>
               <Link href="/learn" onClick={() => setIsMenuOpen(false)}>
                 <Button className="w-full px-3 py-1.5 text-[11px] bg-orange-500 !text-white hover:bg-orange-400 hover:!text-white">
                   Start Learning
