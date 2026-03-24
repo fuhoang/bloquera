@@ -104,12 +104,14 @@ export function LearnOverview({
                       );
                     })}
                   </div>
-                  <Link
-                    href={`/learn/module/${module.slug}`}
-                    className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400"
-                  >
-                    Open module
-                  </Link>
+                  <div className="mt-auto pt-8">
+                    <Link
+                      href={`/learn/module/${module.slug}`}
+                      className="inline-flex w-full items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400"
+                    >
+                      Open module
+                    </Link>
+                  </div>
                 </article>
               );
             })}
