@@ -8,8 +8,15 @@ export type PublicGuide = {
     question: string;
   }>;
   href: Route;
-  id: "learn-crypto" | "bitcoin-for-beginners" | "crypto-wallet-basics";
+  id:
+    | "learn-crypto"
+    | "bitcoin-for-beginners"
+    | "crypto-wallet-basics"
+    | "what-is-bitcoin"
+    | "how-crypto-transactions-work";
   intro: string;
+  ogTitle: string;
+  ogSubtitle: string;
   sections: Array<{
     body: string;
     title: string;
@@ -30,6 +37,8 @@ export const publicGuides: PublicGuide[] = [
       "Learn crypto with a beginner-friendly roadmap, starting with a live Bitcoin track, practical explanations, quizzes, and an AI tutor in Blockwise.",
     intro:
       "Crypto makes more sense when you learn the core ideas in order. Blockwise starts with Bitcoin because it gives beginners a clear foundation in money, wallets, ownership, and network trust before expanding into more tracks.",
+    ogTitle: "Learn crypto with a clear path.",
+    ogSubtitle: "Beginner lessons, quizzes, and tutor support starting with Bitcoin.",
     sections: [
       {
         title: "Start with the foundations",
@@ -76,6 +85,8 @@ export const publicGuides: PublicGuide[] = [
       "Explore Bitcoin for beginners with lessons on money, scarcity, wallets, transactions, and self-custody in Blockwise.",
     intro:
       "Bitcoin is the best place to start if you want to understand crypto clearly. It teaches the foundations of digital scarcity, ownership, and network verification without requiring you to memorize jargon first.",
+    ogTitle: "Bitcoin for beginners.",
+    ogSubtitle: "A calmer starting point for money, scarcity, wallets, and security.",
     sections: [
       {
         title: "Understand why Bitcoin exists",
@@ -122,6 +133,8 @@ export const publicGuides: PublicGuide[] = [
       "Understand crypto wallet basics, including keys, seed phrases, self-custody, and safer storage habits with Blockwise.",
     intro:
       "Most beginners think a wallet holds coins. In practice, wallets manage keys and access. Once that clicks, the rest of self-custody becomes much easier to understand.",
+    ogTitle: "Crypto wallet basics.",
+    ogSubtitle: "Understand keys, seed phrases, custody, and safer habits early.",
     sections: [
       {
         title: "What a wallet really controls",
@@ -154,6 +167,102 @@ export const publicGuides: PublicGuide[] = [
         question: "What is the biggest wallet mistake beginners make?",
         answer:
           "Treating the wallet like a normal app account instead of understanding that keys and recovery phrases are the real source of access.",
+      },
+    ],
+  },
+  {
+    id: "what-is-bitcoin",
+    href: "/what-is-bitcoin",
+    eyebrow: "Bitcoin explained",
+    title: "What is Bitcoin, in plain language?",
+    summary:
+      "Understand Bitcoin as a scarce, open monetary network and why it matters as the live starting track inside Blockwise.",
+    description:
+      "Learn what Bitcoin is in plain language, why it matters, and how beginners can approach it without technical overload in Blockwise.",
+    intro:
+      "Bitcoin can sound abstract until you frame it around money, ownership, and open verification. For beginners, it is less helpful to memorize buzzwords than to understand why the network exists and what problem it is trying to solve.",
+    ogTitle: "What is Bitcoin?",
+    ogSubtitle: "A plain-language explanation for beginners starting in crypto.",
+    sections: [
+      {
+        title: "Bitcoin is a monetary network",
+        body:
+          "At its core, Bitcoin is a system for tracking ownership and value without requiring a bank or company to control the ledger alone.",
+      },
+      {
+        title: "Scarcity changes how people think about it",
+        body:
+          "Bitcoin has a fixed supply policy, which makes it different from systems where rules can change more easily or issuance can expand.",
+      },
+      {
+        title: "Begin with the practical view",
+        body:
+          "For beginners, the most useful first questions are how ownership works, how wallets fit in, and why transactions need verification.",
+      },
+    ],
+    faq: [
+      {
+        question: "Is Bitcoin the same thing as crypto?",
+        answer:
+          "Bitcoin is one part of the broader crypto landscape, but it is often the clearest place for beginners to build first-principles understanding.",
+      },
+      {
+        question: "Why does Blockwise start with Bitcoin?",
+        answer:
+          "It is the live track today and gives beginners a strong foundation in scarcity, self-custody, and network trust before they compare other systems.",
+      },
+      {
+        question: "Do I need to buy Bitcoin to learn it?",
+        answer:
+          "No. You can learn the concepts first, understand the risks, and build judgment before deciding whether ownership makes sense for you.",
+      },
+    ],
+  },
+  {
+    id: "how-crypto-transactions-work",
+    href: "/how-crypto-transactions-work",
+    eyebrow: "Transactions",
+    title: "How crypto transactions work for beginners",
+    summary:
+      "Learn the simple flow behind addresses, signing, network verification, fees, and confirmations without drowning in jargon.",
+    description:
+      "Understand how crypto transactions work, including signing, fees, confirmations, and common beginner mistakes in Blockwise.",
+    intro:
+      "Crypto transactions are easier to understand when you stop thinking about them like a bank transfer and start thinking about signed messages that a network verifies. That shift makes fees, confirmations, and wallet behavior much more intuitive.",
+    ogTitle: "How crypto transactions work.",
+    ogSubtitle: "From signing to confirmations, without the jargon overload.",
+    sections: [
+      {
+        title: "A transaction starts with a signed instruction",
+        body:
+          "Your wallet uses keys to authorize a movement of value. The network then checks whether that instruction is valid and spendable.",
+      },
+      {
+        title: "Fees pay for inclusion and priority",
+        body:
+          "Fees are part of how networks prioritize limited block space, which is why they can rise and fall depending on demand.",
+      },
+      {
+        title: "Confirmations build confidence",
+        body:
+          "Once included, later blocks strengthen the confidence that the transaction is final enough for the context.",
+      },
+    ],
+    faq: [
+      {
+        question: "Why do crypto transactions take time?",
+        answer:
+          "Because networks need to validate and include them, and later confirmations increase confidence that the transaction is settled.",
+      },
+      {
+        question: "Why do fees change?",
+        answer:
+          "Fees usually reflect how much demand there is for limited block space at a given moment.",
+      },
+      {
+        question: "Does this guide only apply to Bitcoin?",
+        answer:
+          "The live examples in Blockwise are Bitcoin-first, but the basic mental model of signing, broadcasting, and confirmation helps across crypto networks.",
       },
     ],
   },

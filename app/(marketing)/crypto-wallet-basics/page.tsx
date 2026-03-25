@@ -12,7 +12,7 @@ export const metadata: Metadata = createPageMetadata({
     guide?.description ??
     "Understand crypto wallet basics with guided explanations in Blockwise.",
   pathname: "/crypto-wallet-basics",
-  imagePath: "/opengraph-image",
+  imagePath: "/crypto-wallet-basics/opengraph-image",
 });
 
 export default function CryptoWalletBasicsPage() {

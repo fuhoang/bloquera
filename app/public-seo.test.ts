@@ -1,7 +1,9 @@
 import { metadata as bitcoinForBeginnersMetadata } from "@/app/(marketing)/bitcoin-for-beginners/page";
 import { metadata as walletBasicsMetadata } from "@/app/(marketing)/crypto-wallet-basics/page";
+import { metadata as transactionsMetadata } from "@/app/(marketing)/how-crypto-transactions-work/page";
 import { metadata as learnCryptoMetadata } from "@/app/(marketing)/learn-crypto/page";
 import { metadata as pricingMetadata } from "@/app/(marketing)/pricing/page";
+import { metadata as whatIsBitcoinMetadata } from "@/app/(marketing)/what-is-bitcoin/page";
 import { metadata as homeMetadata } from "@/app/page";
 
 describe("public metadata", () => {
@@ -18,15 +20,37 @@ describe("public metadata", () => {
     expect(walletBasicsMetadata.alternates?.canonical).toBe(
       "http://localhost:3000/crypto-wallet-basics",
     );
+    expect(whatIsBitcoinMetadata.alternates?.canonical).toBe(
+      "http://localhost:3000/what-is-bitcoin",
+    );
+    expect(transactionsMetadata.alternates?.canonical).toBe(
+      "http://localhost:3000/how-crypto-transactions-work",
+    );
   });
 
-  it("uses the pricing social image on the pricing page", () => {
+  it("uses dedicated social images on public marketing pages", () => {
     expect(pricingMetadata.openGraph?.images).toEqual([
       {
         url: "http://localhost:3000/pricing/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Pricing",
+      },
+    ]);
+    expect(learnCryptoMetadata.openGraph?.images).toEqual([
+      {
+        url: "http://localhost:3000/learn-crypto/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Learn crypto",
+      },
+    ]);
+    expect(whatIsBitcoinMetadata.openGraph?.images).toEqual([
+      {
+        url: "http://localhost:3000/what-is-bitcoin/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "What is Bitcoin",
       },
     ]);
   });

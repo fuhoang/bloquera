@@ -13,6 +13,29 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default function Page() {
+  const faq = [
+    {
+      question: "Is Blockwise for complete beginners?",
+      answer:
+        "Yes. Blockwise is built to explain crypto concepts in plain language with guides, lessons, quizzes, and AI tutor support.",
+    },
+    {
+      question: "Why does Blockwise start with Bitcoin?",
+      answer:
+        "Bitcoin is the live track today and gives beginners a strong foundation in scarcity, self-custody, and network verification before new tracks arrive.",
+    },
+    {
+      question: "Do I need to buy crypto to start learning?",
+      answer:
+        "No. You can learn the concepts first, use the guides and curriculum, and decide later whether ownership makes sense for you.",
+    },
+    {
+      question: "Will Blockwise expand beyond Bitcoin?",
+      answer:
+        "Yes. The platform is designed to support broader crypto tracks over time while keeping the current learning path focused.",
+    },
+  ];
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -52,6 +75,17 @@ export default function Page() {
           position: index + 1,
           name: guide.title,
           url: absoluteUrl(guide.href),
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
         })),
       },
     ],

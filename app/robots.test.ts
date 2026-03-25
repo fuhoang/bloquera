@@ -6,7 +6,15 @@ describe("robots", () => {
 
     expect(result.rules).toEqual({
       userAgent: "*",
-      allow: ["/", "/pricing", "/learn-crypto", "/bitcoin-for-beginners", "/crypto-wallet-basics"],
+      allow: [
+        "/",
+        "/pricing",
+        "/learn-crypto",
+        "/bitcoin-for-beginners",
+        "/crypto-wallet-basics",
+        "/what-is-bitcoin",
+        "/how-crypto-transactions-work",
+      ],
       disallow: ["/auth/", "/dashboard", "/learn", "/profiles", "/purchases", "/api/"],
     });
     expect(result.sitemap).toBe("http://localhost:3000/sitemap.xml");

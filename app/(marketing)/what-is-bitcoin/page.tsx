@@ -4,18 +4,18 @@ import { GuideLandingPage } from "@/components/marketing/GuideLandingPage";
 import { getPublicGuide } from "@/lib/public-guides";
 import { createPageMetadata } from "@/lib/seo";
 
-const guide = getPublicGuide("bitcoin-for-beginners");
+const guide = getPublicGuide("what-is-bitcoin");
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Bitcoin for beginners",
+  title: "What is Bitcoin",
   description:
     guide?.description ??
-    "Explore Bitcoin for beginners with guided lessons in Blockwise.",
-  pathname: "/bitcoin-for-beginners",
-  imagePath: "/bitcoin-for-beginners/opengraph-image",
+    "Learn what Bitcoin is in plain language with Blockwise.",
+  pathname: "/what-is-bitcoin",
+  imagePath: "/what-is-bitcoin/opengraph-image",
 });
 
-export default function BitcoinForBeginnersPage() {
+export default function WhatIsBitcoinPage() {
   if (!guide) {
     return null;
   }

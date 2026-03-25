@@ -18,10 +18,28 @@ export function GuideLandingPage({ guide }: { guide: PublicGuide }) {
         "@type": "Course",
         name: guide.title,
         description: guide.summary,
+        url: absoluteUrl(guide.href),
         provider: {
           "@type": "Organization",
           name: "Blockwise",
         },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: guide.title,
+            item: absoluteUrl(guide.href),
+          },
+        ],
       },
       {
         "@type": "FAQPage",
@@ -46,6 +64,13 @@ export function GuideLandingPage({ guide }: { guide: PublicGuide }) {
       />
       <main className="min-h-screen bg-zinc-950 px-6 py-16 text-white">
         <section className="mx-auto max-w-5xl">
+          <nav aria-label="Breadcrumb" className="text-sm text-zinc-500">
+            <Link href="/" className="transition hover:text-zinc-300">
+              Home
+            </Link>
+            <span className="px-2 text-zinc-700">/</span>
+            <span>{guide.title}</span>
+          </nav>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-400">
             {guide.eyebrow}
           </p>

@@ -110,6 +110,10 @@ describe("HomePage", () => {
     expect(screen.getByText("Learn crypto with a clear starting path")).toBeInTheDocument();
     expect(screen.getByText("Bitcoin for beginners, without the noise")).toBeInTheDocument();
     expect(screen.getByText("Crypto wallet basics for real beginners")).toBeInTheDocument();
+    expect(screen.getByText("What is Bitcoin, in plain language?")).toBeInTheDocument();
+    expect(screen.getByText("How crypto transactions work for beginners")).toBeInTheDocument();
+    expect(screen.getByText("Common questions before you start learning.")).toBeInTheDocument();
+    expect(screen.getByText("Is Blockwise for complete beginners?")).toBeInTheDocument();
     expect(screen.getByText("Monthly plan")).toBeInTheDocument();
     expect(screen.getByText("Yearly plan")).toBeInTheDocument();
   });

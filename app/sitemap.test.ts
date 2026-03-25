@@ -12,6 +12,8 @@ describe("sitemap", () => {
         "http://localhost:3000/learn-crypto",
         "http://localhost:3000/bitcoin-for-beginners",
         "http://localhost:3000/crypto-wallet-basics",
+        "http://localhost:3000/what-is-bitcoin",
+        "http://localhost:3000/how-crypto-transactions-work",
       ]),
     );
   });
