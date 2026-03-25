@@ -97,6 +97,12 @@ describe("HomePage", () => {
   it("renders the curriculum modules and pricing plans", () => {
     render(<HomePage />);
 
+    expect(screen.getByText("A clearer path into crypto.")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Start with the live Bitcoin track, build confidence around security and transactions/i,
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText("Foundations")).toBeInTheDocument();
     expect(screen.getByText("Core Concepts")).toBeInTheDocument();
     expect(screen.getByText("Wallets & Ownership")).toBeInTheDocument();

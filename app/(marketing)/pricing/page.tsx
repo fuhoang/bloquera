@@ -20,7 +20,7 @@ const plans = [
 export const metadata: Metadata = createPageMetadata({
   title: "Pricing",
   description:
-    "View Blockwise pricing for Bitcoin learning plans, including curriculum access, quizzes, and AI tutor support.",
+    "View Blockwise pricing for guided crypto learning plans, including the live Bitcoin curriculum, quizzes, and AI tutor support.",
   pathname: "/pricing",
 });
 
@@ -31,7 +31,7 @@ export default function PricingPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent-strong)]">
           Pricing
         </p>
-        <h1 className="mt-3 text-5xl font-black tracking-tight">Simple plans for serious learners</h1>
+        <h1 className="mt-3 text-5xl font-black tracking-tight">Simple plans for serious crypto learners</h1>
       </div>
       <div className="mt-10 grid gap-5 md:grid-cols-2">
         {plans.map((plan) => (

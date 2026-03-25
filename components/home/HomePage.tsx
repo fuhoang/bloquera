@@ -203,11 +203,12 @@ export default function HomePage() {
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-sm text-zinc-500">Curriculum</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              A clearer path into Bitcoin.
+              A clearer path into crypto.
             </h2>
             <p className="mt-4 text-base leading-8 text-zinc-400">
-              Start with the basics, move into security and transactions, and
-              use AI prompts for deeper understanding.
+              Start with the live Bitcoin track, build confidence around
+              security and transactions, and use AI prompts for deeper
+              understanding as more tracks arrive.
             </p>
           </div>
 
@@ -259,8 +260,8 @@ export default function HomePage() {
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-zinc-400">
               Most people do not need more noise. They need a trusted place to
-              learn Bitcoin step by step, ask smart questions, and avoid common
-              mistakes.
+              learn crypto fundamentals, start with Bitcoin step by step, and
+              avoid common mistakes.
             </p>
           </div>
 
