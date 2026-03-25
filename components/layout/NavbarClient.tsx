@@ -43,10 +43,10 @@ export function NavbarClient({
           >
             <span
               aria-hidden="true"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5"
             >
               <svg
-                className="h-8 w-8"
+                className="h-6 w-6"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -108,10 +108,10 @@ export function NavbarClient({
         >
           <span
             aria-hidden="true"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5"
           >
             <svg
-              className="h-9 w-9"
+              className="h-7 w-7"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
