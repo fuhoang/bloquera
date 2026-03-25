@@ -5,6 +5,7 @@ import type { Route } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
+import { getAccountStatus } from "@/lib/account-status";
 
 type NavLink = {
   href: Route | "/#demo" | "/#pricing";
@@ -30,6 +31,7 @@ export function NavbarClient({
   isAuthenticated,
   userLabel,
 }: NavbarClientProps) {
+  const accountStatus = getAccountStatus();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileInitial = userLabel?.charAt(0).toUpperCase() ?? "P";
@@ -140,7 +142,7 @@ export function NavbarClient({
           {isAuthenticated ? (
             <div className="relative flex items-center gap-3">
               <span className="rounded-full border border-orange-500/20 bg-orange-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-orange-300">
-                Free plan
+                {accountStatus.planLabel} plan
               </span>
               <button
                 aria-expanded={isProfileMenuOpen}
@@ -169,7 +171,10 @@ export function NavbarClient({
                     </p>
                   ) : null}
                   <p className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-zinc-400">
-                    Free plan
+                    {accountStatus.headline}
+                  </p>
+                  <p className="mt-3 px-1 text-xs leading-6 text-zinc-500">
+                    {accountStatus.planSummary}
                   </p>
                   <div className="mt-3 flex flex-col gap-2">
                     <Link
@@ -250,7 +255,7 @@ export function NavbarClient({
                     </p>
                   ) : null}
                   <p className="rounded-full border border-orange-500/20 bg-orange-500/10 px-3 py-1 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-orange-300">
-                    Free plan
+                    {accountStatus.planLabel} plan
                   </p>
                   <Link href="/profiles" onClick={() => setIsMenuOpen(false)}>
                     <Button className="w-full" variant="secondary">

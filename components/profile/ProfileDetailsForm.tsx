@@ -56,6 +56,7 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
   const avatarSizeLabel = avatarFile
     ? `${(avatarFile.size / 1024 / 1024).toFixed(2)} MB`
     : null;
+  const avatarExtension = avatarFile?.name.split(".").pop()?.toUpperCase() ?? null;
 
   async function deleteAvatar(avatarToDelete: string) {
     await fetch("/api/profile/avatar", {
@@ -213,6 +214,7 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
             accept="image/png,image/jpeg,image/webp"
             aria-label="Avatar image"
             className="mt-2 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none file:mr-3 file:rounded-full file:border-0 file:bg-orange-500 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-orange-400"
+            disabled={isSaving || isRemovingAvatar}
             ref={avatarInputRef}
             onChange={(event) =>
               setAvatarFile(event.target.files?.[0] ?? null)
@@ -220,7 +222,7 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
             type="file"
           />
           <p className="mt-2 text-xs text-zinc-500">
-            Upload a JPG, PNG, or WebP image up to 2MB.
+            Upload a JPG, PNG, or WebP image up to 2MB. Square images at 400x400 or larger work best.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-4">
             <span className="inline-flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5 text-base font-semibold text-white">
@@ -236,6 +238,16 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
               )}
             </span>
             <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-300">
+                  {avatarFile ? "New avatar preview" : avatarUrl.trim() ? "Current avatar" : "No avatar yet"}
+                </span>
+                {avatarExtension ? (
+                  <span className="rounded-full border border-orange-500/20 bg-orange-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-orange-300">
+                    {avatarExtension}
+                  </span>
+                ) : null}
+              </div>
               <p className="text-sm font-medium text-zinc-200">
                 {avatarFile
                   ? `Selected: ${avatarFile.name}`
@@ -256,17 +268,33 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
                 </p>
               ) : null}
             </div>
-            {hasAvatar ? (
-              <Button
-                className="border border-white/10 bg-white !text-black hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-60"
-                disabled={isRemovingAvatar || isSaving}
-                onClick={handleRemoveAvatar}
-                type="button"
-                variant="secondary"
-              >
-                {isRemovingAvatar ? "Removing..." : "Remove avatar"}
-              </Button>
-            ) : null}
+            <div className="flex flex-wrap items-center gap-2">
+              {hasAvatar ? (
+                <Button
+                  className="border border-white/10 bg-white !text-black hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={isRemovingAvatar || isSaving}
+                  onClick={handleRemoveAvatar}
+                  type="button"
+                  variant="secondary"
+                >
+                  {isRemovingAvatar ? "Removing..." : avatarFile ? "Discard and remove avatar" : "Remove avatar"}
+                </Button>
+              ) : null}
+              {avatarFile ? (
+                <button
+                  className="text-sm font-medium text-zinc-400 transition hover:text-white"
+                  onClick={() => {
+                    setAvatarFile(null);
+                    if (avatarInputRef.current) {
+                      avatarInputRef.current.value = "";
+                    }
+                  }}
+                  type="button"
+                >
+                  Clear selected file
+                </button>
+              ) : null}
+            </div>
           </div>
         </label>
 
@@ -334,20 +362,6 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
                 ? "Upload avatar and save"
                 : "Save profile"}
           </Button>
-          {avatarFile ? (
-            <button
-              className="text-sm font-medium text-zinc-400 transition hover:text-white"
-              onClick={() => {
-                setAvatarFile(null);
-                if (avatarInputRef.current) {
-                  avatarInputRef.current.value = "";
-                }
-              }}
-              type="button"
-            >
-              Clear selected file
-            </button>
-          ) : null}
         </div>
       </form>
     </section>

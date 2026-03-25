@@ -23,6 +23,7 @@ describe("activity route", () => {
     expect(payload).toEqual({
       lessonCompletions: [],
       quizAttempts: [],
+      tutorPrompts: [],
     });
   });
 
@@ -94,6 +95,32 @@ describe("activity route", () => {
         totalQuestions: 3,
         passed: true,
         attemptedAt: "2026-03-25T18:05:00.000Z",
+      },
+    ]);
+  });
+
+  it("stores tutor prompts in the fallback cookie payload", async () => {
+    const response = await POST(
+      new Request("http://localhost/api/activity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "tutor_prompt",
+          lessonSlug: "ai-tutor",
+          lessonTitle: "How does Bitcoin supply work?",
+          repliedAt: "2026-03-25T18:10:00.000Z",
+        }),
+      }),
+    );
+
+    const payload = await response.json();
+
+    expect(payload.tutorPrompts).toEqual([
+      {
+        prompt: "How does Bitcoin supply work?",
+        repliedAt: "2026-03-25T18:10:00.000Z",
       },
     ]);
   });

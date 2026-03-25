@@ -101,8 +101,10 @@ describe("DashboardOverview", () => {
     mockUseLearningHistory.mockReturnValue({
       lessonCompletions: [],
       quizAttempts: [],
+      tutorPrompts: [],
       recordLessonCompleted: vi.fn(),
       recordQuizAttempt: vi.fn(),
+      recordTutorPrompt: vi.fn(),
     });
   });
 
@@ -129,6 +131,7 @@ describe("DashboardOverview", () => {
     expect(screen.getAllByText("Foundations")).toHaveLength(2);
     expect(screen.getByText("No active subscription")).toBeInTheDocument();
     expect(screen.getByText("What Is Bitcoin?")).toBeInTheDocument();
+    expect(screen.getByText("No tutor prompts yet")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Open next lesson" })).toHaveAttribute(
       "href",
       "/learn/what-is-bitcoin",
@@ -169,8 +172,15 @@ describe("DashboardOverview", () => {
           passed: true,
         },
       ],
+      tutorPrompts: [
+        {
+          prompt: "Why does Bitcoin have a fixed supply?",
+          repliedAt: "2026-03-25T11:10:00.000Z",
+        },
+      ],
       recordLessonCompleted: vi.fn(),
       recordQuizAttempt: vi.fn(),
+      recordTutorPrompt: vi.fn(),
     });
 
     render(
@@ -186,5 +196,7 @@ describe("DashboardOverview", () => {
     expect(screen.getByText("Lesson completed")).toBeInTheDocument();
     expect(screen.getByText("3 of 3 correct")).toBeInTheDocument();
     expect(screen.getByText("Protected account")).toBeInTheDocument();
+    expect(screen.getByText("Tutor session")).toBeInTheDocument();
+    expect(screen.getAllByText("Why does Bitcoin have a fixed supply?")[0]).toBeInTheDocument();
   });
 });

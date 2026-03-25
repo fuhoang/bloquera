@@ -7,7 +7,11 @@ import {
   sanitizeLearningHistory,
 } from "@/lib/learning-history";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import type { LearningHistory, QuizAttemptRecord } from "@/types/activity";
+import type {
+  LearningHistory,
+  QuizAttemptRecord,
+  TutorPromptRecord,
+} from "@/types/activity";
 
 const ACTIVITY_COOKIE = "satoshilearn-activity";
 
@@ -26,6 +30,12 @@ type ActivityInsertBody =
       totalQuestions?: number;
       passed?: boolean;
       attemptedAt?: string;
+    }
+  | {
+      type: "tutor_prompt";
+      lessonSlug?: string;
+      lessonTitle?: string;
+      repliedAt?: string;
     };
 
 async function readCookieHistory() {
@@ -108,6 +118,12 @@ async function readSupabaseHistory() {
           passed: Boolean(row.passed),
           attemptedAt: row.created_at,
         })),
+      tutorPrompts: data
+        .filter((row) => row.activity_type === "tutor_prompt")
+        .map((row) => ({
+          prompt: row.lesson_title,
+          repliedAt: row.created_at,
+        })),
     }),
     persisted: true,
   };
@@ -135,6 +151,19 @@ function sanitizeActivityInsert(body: ActivityInsertBody) {
       completedAt:
         typeof body.completedAt === "string" && !Number.isNaN(Date.parse(body.completedAt))
           ? body.completedAt
+          : new Date().toISOString(),
+    };
+  }
+
+  if (body.type === "tutor_prompt") {
+    return {
+      type: "tutor_prompt" as const,
+      lessonSlug: body.lessonSlug,
+      lessonTitle: body.lessonTitle,
+      repliedAt:
+        typeof body.repliedAt === "string" &&
+        !Number.isNaN(Date.parse(body.repliedAt))
+          ? body.repliedAt
           : new Date().toISOString(),
     };
   }
@@ -225,16 +254,24 @@ async function writeSupabaseHistory(body: ActivityInsertBody) {
           lesson_title: nextActivity.lessonTitle,
           user_id: user.id,
         }
-      : {
-          activity_type: "quiz_attempt",
-          correct_count: nextActivity.correctCount,
-          created_at: nextActivity.attemptedAt,
-          lesson_slug: nextActivity.lessonSlug,
-          lesson_title: nextActivity.lessonTitle,
-          passed: nextActivity.passed,
-          total_questions: nextActivity.totalQuestions,
-          user_id: user.id,
-        };
+      : nextActivity.type === "quiz_attempt"
+        ? {
+            activity_type: "quiz_attempt",
+            correct_count: nextActivity.correctCount,
+            created_at: nextActivity.attemptedAt,
+            lesson_slug: nextActivity.lessonSlug,
+            lesson_title: nextActivity.lessonTitle,
+            passed: nextActivity.passed,
+            total_questions: nextActivity.totalQuestions,
+            user_id: user.id,
+          }
+        : {
+            activity_type: "tutor_prompt",
+            created_at: nextActivity.repliedAt,
+            lesson_slug: nextActivity.lessonSlug,
+            lesson_title: nextActivity.lessonTitle,
+            user_id: user.id,
+          };
 
   const { error } = await supabase.from("learning_activity").insert(insertPayload);
 
@@ -292,20 +329,33 @@ export async function POST(request: Request) {
             },
           ],
           quizAttempts: [],
+          tutorPrompts: [],
         })
-      : mergeLearningHistory(current, {
-          lessonCompletions: [],
-          quizAttempts: [
-            {
-              lessonSlug: nextActivity.lessonSlug,
-              lessonTitle: nextActivity.lessonTitle,
-              correctCount: nextActivity.correctCount,
-              totalQuestions: nextActivity.totalQuestions,
-              passed: nextActivity.passed,
-              attemptedAt: nextActivity.attemptedAt,
-            } satisfies QuizAttemptRecord,
-          ],
-        });
+      : nextActivity.type === "quiz_attempt"
+        ? mergeLearningHistory(current, {
+            lessonCompletions: [],
+            quizAttempts: [
+              {
+                lessonSlug: nextActivity.lessonSlug,
+                lessonTitle: nextActivity.lessonTitle,
+                correctCount: nextActivity.correctCount,
+                totalQuestions: nextActivity.totalQuestions,
+                passed: nextActivity.passed,
+                attemptedAt: nextActivity.attemptedAt,
+              } satisfies QuizAttemptRecord,
+            ],
+            tutorPrompts: [],
+          })
+        : mergeLearningHistory(current, {
+            lessonCompletions: [],
+            quizAttempts: [],
+            tutorPrompts: [
+              {
+                prompt: nextActivity.lessonTitle,
+                repliedAt: nextActivity.repliedAt,
+              } satisfies TutorPromptRecord,
+            ],
+          });
 
   return writeCookieHistory(merged);
 }

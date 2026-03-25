@@ -26,7 +26,10 @@ describe("purchases page route", () => {
     expect(
       screen.getByText("No purchases are linked to this account yet."),
     ).toBeInTheDocument();
-    expect(screen.getByText("Billing roadmap")).toBeInTheDocument();
+    expect(screen.getByText("Plan roadmap")).toBeInTheDocument();
     expect(screen.getByText("Satoshi")).toBeInTheDocument();
+    expect(
+      screen.getByText("Priority learning tracks and future premium modules"),
+    ).toBeInTheDocument();
   });
 });

@@ -29,7 +29,7 @@ export default async function PurchasesPage() {
               {accountStatus.headline}
             </h2>
             <p className="mt-3 text-sm leading-7 text-zinc-300">
-              {accountStatus.billingStatus}
+              {accountStatus.billingSummary}
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               <span className="rounded-full border border-orange-500/20 bg-orange-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-orange-300">
@@ -54,12 +54,21 @@ export default async function PurchasesPage() {
           <div className="space-y-6">
             <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8">
               <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
-                Billing roadmap
+                Plan roadmap
               </p>
               <div className="mt-4 space-y-3 text-sm leading-7 text-zinc-300">
                 <p>No purchases are linked to this account yet.</p>
-                <p>Stripe checkout, renewals, invoice history, and plan changes will appear here once billing is connected.</p>
                 <p>{accountStatus.nextStep}</p>
+              </div>
+              <div className="mt-5 space-y-3">
+                {accountStatus.upcomingFeatures.map((feature) => (
+                  <div
+                    key={feature}
+                    className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-zinc-200"
+                  >
+                    {feature}
+                  </div>
+                ))}
               </div>
             </section>
 

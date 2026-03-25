@@ -15,6 +15,7 @@ describe("useLearningHistory", () => {
           JSON.stringify({
             lessonCompletions: [],
             quizAttempts: [],
+            tutorPrompts: [],
           }),
           { status: 200 },
         );
@@ -24,6 +25,7 @@ describe("useLearningHistory", () => {
         JSON.stringify({
           lessonCompletions: [],
           quizAttempts: [],
+          tutorPrompts: [],
         }),
         { status: 200 },
       );
@@ -53,10 +55,12 @@ describe("useLearningHistory", () => {
         lessonSlug: "what-is-money",
         lessonTitle: "What Is Money?",
       });
+      result.current.recordTutorPrompt("How does Bitcoin supply work?");
     });
 
     expect(result.current.quizAttempts).toHaveLength(1);
     expect(result.current.lessonCompletions).toHaveLength(1);
+    expect(result.current.tutorPrompts).toHaveLength(1);
     expect(result.current.quizAttempts[0]).toMatchObject({
       lessonSlug: "what-is-money",
       passed: true,
@@ -70,6 +74,13 @@ describe("useLearningHistory", () => {
           "Content-Type": "application/json",
         },
         body: expect.stringContaining('"type":"lesson_completion"'),
+      }),
+    );
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      4,
+      "/api/activity",
+      expect.objectContaining({
+        body: expect.stringContaining('"type":"tutor_prompt"'),
       }),
     );
   });

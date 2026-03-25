@@ -102,7 +102,7 @@ export default async function ProfilesPage() {
             <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
               <p className="text-lg font-semibold text-white">{accountStatus.headline}</p>
               <p className="mt-2 text-sm leading-7 text-zinc-300">
-                {accountStatus.billingStatus}
+                {accountStatus.billingSummary}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {accountStatus.includedFeatures.map((feature) => (
@@ -120,6 +120,16 @@ export default async function ProfilesPage() {
               <p className="mt-2 text-sm leading-7 text-zinc-300">
                 {accountStatus.nextStep}
               </p>
+              <div className="mt-4 space-y-2">
+                {accountStatus.upcomingFeatures.slice(0, 2).map((feature) => (
+                  <p
+                    key={feature}
+                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300"
+                  >
+                    {feature}
+                  </p>
+                ))}
+              </div>
               <a
                 className="mt-4 inline-flex text-sm font-semibold text-orange-300"
                 href={accountStatus.ctaHref}

@@ -31,7 +31,7 @@ export function DashboardOverview({
 }: DashboardOverviewProps) {
   const accountStatus = getAccountStatus();
   const { completedCount, completedLessonSlugs, loaded } = useLessonProgress();
-  const { lessonCompletions, quizAttempts } = useLearningHistory();
+  const { lessonCompletions, quizAttempts, tutorPrompts } = useLearningHistory();
   const currentModule = getCurrentModule(modules, completedLessonSlugs);
   const nextLesson = currentModule
     ? getNextModuleLesson(currentModule, completedLessonSlugs)
@@ -65,6 +65,12 @@ export function DashboardOverview({
       passed: entry.passed,
       scoreLabel: `${entry.correctCount}/${entry.totalQuestions}`,
     })),
+    ...tutorPrompts.map((entry) => ({
+      kind: "tutor" as const,
+      lessonSlug: "ai-tutor",
+      lessonTitle: entry.prompt,
+      timestamp: entry.repliedAt,
+    })),
   ]
     .sort((left, right) => Date.parse(right.timestamp) - Date.parse(left.timestamp))
     .slice(0, 5);
@@ -93,6 +99,7 @@ export function DashboardOverview({
         <div className="mt-5 flex flex-wrap gap-2">
           <StatusPill label={accountStatus.planLabel} tone="accent" />
           <StatusPill label={accountStatus.billingStatus} tone="neutral" />
+          <StatusPill label="Tutor history synced" tone="success" />
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-4">
           <SummaryCard
@@ -223,8 +230,18 @@ export function DashboardOverview({
                 </p>
                 <p className="mt-3 text-lg font-semibold">{accountStatus.headline}</p>
                 <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
-                  {accountStatus.nextStep}
+                  {accountStatus.planSummary}
                 </p>
+                <div className="mt-4 space-y-2">
+                  {accountStatus.upcomingFeatures.slice(0, 2).map((feature) => (
+                    <p
+                      key={feature}
+                      className="rounded-2xl border border-black/8 bg-black/5 px-3 py-2 text-sm text-[var(--muted)]"
+                    >
+                      {feature}
+                    </p>
+                  ))}
+                </div>
                 <Link
                   href={accountStatus.ctaHref}
                   className="mt-5 inline-flex text-sm font-semibold text-[var(--accent-strong)]"
@@ -267,9 +284,11 @@ export function DashboardOverview({
                           <p className="text-sm font-semibold">
                             {entry.kind === "completion"
                               ? "Lesson completed"
-                              : entry.passed
-                                ? "Quiz passed"
-                                : "Quiz review needed"}
+                              : entry.kind === "tutor"
+                                ? "Tutor session"
+                                : entry.passed
+                                  ? "Quiz passed"
+                                  : "Quiz review needed"}
                           </p>
                           <p className="mt-1 text-sm text-[var(--muted)]">
                             {entry.lessonTitle}
@@ -325,6 +344,33 @@ export function DashboardOverview({
                 <EmptyState
                   body="Your last quiz results will appear here once you finish a lesson check."
                   title="No quiz attempts yet"
+                />
+              )}
+            </div>
+
+            <div className="surface rounded-3xl p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent-strong)]">
+                Tutor history
+              </p>
+              <h2 className="mt-2 text-2xl font-bold">Recent AI tutor prompts</h2>
+              {tutorPrompts.length > 0 ? (
+                <div className="mt-6 space-y-3">
+                  {tutorPrompts.slice(0, 4).map((entry) => (
+                    <div
+                      key={`${entry.prompt}-${entry.repliedAt}`}
+                      className="rounded-3xl border border-black/8 bg-white/75 p-4"
+                    >
+                      <p className="text-sm font-semibold">{entry.prompt}</p>
+                      <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+                        {formatRelativeTimestamp(entry.repliedAt)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  body="Ask the AI tutor a question and it will show up here for quick reference."
+                  title="No tutor prompts yet"
                 />
               )}
             </div>

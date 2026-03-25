@@ -13,7 +13,13 @@ export interface QuizAttemptRecord {
   attemptedAt: string;
 }
 
+export interface TutorPromptRecord {
+  prompt: string;
+  repliedAt: string;
+}
+
 export interface LearningHistory {
   lessonCompletions: LessonCompletionRecord[];
   quizAttempts: QuizAttemptRecord[];
+  tutorPrompts: TutorPromptRecord[];
 }

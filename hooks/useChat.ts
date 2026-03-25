@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 
+import { useLearningHistory } from "@/hooks/useLearningHistory";
 import type { ChatMessage } from "@/types/chat";
 
 const welcomeMessage: ChatMessage = {
@@ -15,6 +16,7 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
   const [messages, setMessages] = useState<ChatMessage[]>([...initialMessages]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { recordTutorPrompt } = useLearningHistory();
 
   const sendMessage = useCallback(async (content: string) => {
     const trimmedContent = content.trim();
@@ -62,6 +64,7 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
           content: reply,
         },
       ]);
+      recordTutorPrompt(trimmedContent);
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
@@ -72,7 +75,7 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [recordTutorPrompt]);
 
   return { messages, isLoading, error, sendMessage };
 }

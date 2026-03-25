@@ -82,8 +82,10 @@ describe("LessonQuizGate", () => {
     mockUseLearningHistory.mockReturnValue({
       lessonCompletions: [],
       quizAttempts: [],
+      tutorPrompts: [],
       recordLessonCompleted: vi.fn(),
       recordQuizAttempt: vi.fn(),
+      recordTutorPrompt: vi.fn(),
     });
     mockUseLessonProgress.mockReturnValue({
       loaded: true,
@@ -128,8 +130,10 @@ describe("LessonQuizGate", () => {
     mockUseLearningHistory.mockReturnValue({
       lessonCompletions: [],
       quizAttempts: [],
+      tutorPrompts: [],
       recordLessonCompleted,
       recordQuizAttempt,
+      recordTutorPrompt: vi.fn(),
     });
 
     render(

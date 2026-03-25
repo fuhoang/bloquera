@@ -2,15 +2,18 @@ import type {
   LearningHistory,
   LessonCompletionRecord,
   QuizAttemptRecord,
+  TutorPromptRecord,
 } from "@/types/activity";
 
 export const EMPTY_LEARNING_HISTORY: LearningHistory = {
   lessonCompletions: [],
   quizAttempts: [],
+  tutorPrompts: [],
 };
 
 const MAX_LESSON_COMPLETIONS = 12;
 const MAX_QUIZ_ATTEMPTS = 12;
+const MAX_TUTOR_PROMPTS = 10;
 
 function isIsoDate(value: string) {
   return !Number.isNaN(Date.parse(value));
@@ -63,6 +66,17 @@ export function sanitizeLearningHistory(value: unknown): LearningHistory {
       )
     : [];
 
+  const tutorPrompts = Array.isArray((value as LearningHistory).tutorPrompts)
+    ? (value as LearningHistory).tutorPrompts.filter(
+        (record): record is TutorPromptRecord =>
+          Boolean(record) &&
+          typeof record.prompt === "string" &&
+          record.prompt.length > 0 &&
+          typeof record.repliedAt === "string" &&
+          isIsoDate(record.repliedAt),
+      )
+    : [];
+
   return {
     lessonCompletions: dedupedLessonCompletions,
     quizAttempts: quizAttempts
@@ -71,6 +85,12 @@ export function sanitizeLearningHistory(value: unknown): LearningHistory {
           Date.parse(right.attemptedAt) - Date.parse(left.attemptedAt),
       )
       .slice(0, MAX_QUIZ_ATTEMPTS),
+    tutorPrompts: tutorPrompts
+      .sort(
+        (left, right) =>
+          Date.parse(right.repliedAt) - Date.parse(left.repliedAt),
+      )
+      .slice(0, MAX_TUTOR_PROMPTS),
   };
 }
 
@@ -84,5 +104,6 @@ export function mergeLearningHistory(
       ...current.lessonCompletions,
     ],
     quizAttempts: [...incoming.quizAttempts, ...current.quizAttempts],
+    tutorPrompts: [...incoming.tutorPrompts, ...current.tutorPrompts],
   });
 }
