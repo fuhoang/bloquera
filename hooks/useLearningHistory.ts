@@ -4,6 +4,7 @@ import { useCallback, useSyncExternalStore } from "react";
 
 import {
   EMPTY_LEARNING_HISTORY,
+  mergeLearningHistory,
   sanitizeLearningHistory,
 } from "@/lib/learning-history";
 import type {
@@ -17,6 +18,7 @@ const STORAGE_EVENT = "satoshilearn-learning-history-change";
 
 let cachedRawHistory = "";
 let cachedHistory = EMPTY_LEARNING_HISTORY;
+let hasLoadedRemoteHistory = false;
 
 function notifyHistoryChange() {
   if (typeof window === "undefined") {
@@ -37,6 +39,23 @@ function writeHistory(history: LearningHistory) {
     window.localStorage.setItem(STORAGE_KEY, raw);
     notifyHistoryChange();
   }
+}
+
+function persistActivity(activity: {
+  correctCount?: number;
+  lessonSlug: string;
+  lessonTitle: string;
+  passed?: boolean;
+  totalQuestions?: number;
+  type: "lesson_completion" | "quiz_attempt";
+}) {
+  void fetch("/api/activity", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(activity),
+  }).catch(() => undefined);
 }
 
 function readHistorySnapshot() {
@@ -74,6 +93,22 @@ function subscribe(callback: () => void) {
   window.addEventListener("storage", handleChange);
   window.addEventListener(STORAGE_EVENT, handleChange);
 
+  if (!hasLoadedRemoteHistory) {
+    hasLoadedRemoteHistory = true;
+
+    void fetch("/api/activity", { method: "GET", cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Failed to load activity");
+        }
+
+        const payload = sanitizeLearningHistory(await response.json());
+        const local = readHistorySnapshot();
+        writeHistory(mergeLearningHistory(local, payload));
+      })
+      .catch(() => undefined);
+  }
+
   return () => {
     window.removeEventListener("storage", handleChange);
     window.removeEventListener(STORAGE_EVENT, handleChange);
@@ -100,14 +135,20 @@ export function useLearningHistory() {
       }
 
       writeHistory({
-        ...current,
-        lessonCompletions: [
-          {
-            ...record,
-            completedAt: new Date().toISOString(),
-          },
-          ...current.lessonCompletions,
-        ],
+        ...mergeLearningHistory(current, {
+          lessonCompletions: [
+            {
+              ...record,
+              completedAt: new Date().toISOString(),
+            },
+          ],
+          quizAttempts: [],
+        }),
+      });
+      persistActivity({
+        lessonSlug: record.lessonSlug,
+        lessonTitle: record.lessonTitle,
+        type: "lesson_completion",
       });
     },
     [],
@@ -117,15 +158,24 @@ export function useLearningHistory() {
     (record: Omit<QuizAttemptRecord, "attemptedAt">) => {
       const current = readHistorySnapshot();
 
-      writeHistory({
-        ...current,
-        quizAttempts: [
-          {
-            ...record,
-            attemptedAt: new Date().toISOString(),
-          },
-          ...current.quizAttempts,
-        ],
+      writeHistory(
+        mergeLearningHistory(current, {
+          lessonCompletions: [],
+          quizAttempts: [
+            {
+              ...record,
+              attemptedAt: new Date().toISOString(),
+            },
+          ],
+        }),
+      );
+      persistActivity({
+        correctCount: record.correctCount,
+        lessonSlug: record.lessonSlug,
+        lessonTitle: record.lessonTitle,
+        passed: record.passed,
+        totalQuestions: record.totalQuestions,
+        type: "quiz_attempt",
       });
     },
     [],

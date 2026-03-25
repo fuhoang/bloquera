@@ -1,4 +1,4 @@
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 
 async function loadHook() {
   vi.resetModules();
@@ -9,11 +9,37 @@ describe("useLearningHistory", () => {
   beforeEach(() => {
     window.localStorage.clear();
     vi.restoreAllMocks();
+    vi.spyOn(global, "fetch").mockImplementation(async (input, init) => {
+      if (!init || init.method === "GET") {
+        return new Response(
+          JSON.stringify({
+            lessonCompletions: [],
+            quizAttempts: [],
+          }),
+          { status: 200 },
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          lessonCompletions: [],
+          quizAttempts: [],
+        }),
+        { status: 200 },
+      );
+    });
   });
 
   it("records quiz attempts and lesson completions", async () => {
     const { useLearningHistory } = await loadHook();
     const { result } = renderHook(() => useLearningHistory());
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith("/api/activity", {
+        method: "GET",
+        cache: "no-store",
+      });
+    });
 
     act(() => {
       result.current.recordQuizAttempt({
@@ -35,6 +61,17 @@ describe("useLearningHistory", () => {
       lessonSlug: "what-is-money",
       passed: true,
     });
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      3,
+      "/api/activity",
+      expect.objectContaining({
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: expect.stringContaining('"type":"lesson_completion"'),
+      }),
+    );
   });
 
   it("does not duplicate lesson completions for the same lesson", async () => {

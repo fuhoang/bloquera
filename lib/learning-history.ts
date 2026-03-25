@@ -73,3 +73,16 @@ export function sanitizeLearningHistory(value: unknown): LearningHistory {
       .slice(0, MAX_QUIZ_ATTEMPTS),
   };
 }
+
+export function mergeLearningHistory(
+  current: LearningHistory,
+  incoming: LearningHistory,
+) {
+  return sanitizeLearningHistory({
+    lessonCompletions: [
+      ...incoming.lessonCompletions,
+      ...current.lessonCompletions,
+    ],
+    quizAttempts: [...incoming.quizAttempts, ...current.quizAttempts],
+  });
+}

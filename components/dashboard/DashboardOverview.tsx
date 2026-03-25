@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { ProgressBar } from "@/components/lesson/ProgressBar";
 import { QuizCard } from "@/components/quiz/QuizCard";
+import { getAccountStatus } from "@/lib/account-status";
 import { useLearningHistory } from "@/hooks/useLearningHistory";
 import { useLessonProgress } from "@/hooks/useLessonProgress";
 import {
@@ -28,6 +29,7 @@ export function DashboardOverview({
   profileLabel,
   totalLessons,
 }: DashboardOverviewProps) {
+  const accountStatus = getAccountStatus();
   const { completedCount, completedLessonSlugs, loaded } = useLessonProgress();
   const { lessonCompletions, quizAttempts } = useLearningHistory();
   const currentModule = getCurrentModule(modules, completedLessonSlugs);
@@ -213,15 +215,15 @@ export function DashboardOverview({
                 <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
                   Subscription
                 </p>
-                <p className="mt-3 text-lg font-semibold">Free plan</p>
+                <p className="mt-3 text-lg font-semibold">{accountStatus.headline}</p>
                 <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
-                  Curriculum, quizzes, and the tutor are active. Billing will plug into this card later.
+                  {accountStatus.nextStep}
                 </p>
                 <Link
-                  href="/purchases"
+                  href={accountStatus.ctaHref}
                   className="mt-5 inline-flex text-sm font-semibold text-[var(--accent-strong)]"
                 >
-                  View purchases
+                  {accountStatus.ctaLabel}
                 </Link>
               </div>
               <div className="rounded-3xl border border-black/8 bg-white/75 p-5">
@@ -230,7 +232,7 @@ export function DashboardOverview({
                 </p>
                 <p className="mt-3 text-lg font-semibold">Protected account</p>
                 <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
-                  Progress sync, reset-password support, and authenticated access are active on this account.
+                  Progress sync, reset-password support, authenticated access, and dashboard history are active on this account.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   <StatusPill label="Auth active" tone="neutral" />

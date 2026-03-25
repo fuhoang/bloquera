@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
@@ -34,6 +34,7 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
   const timezones = useMemo(() => {
     const supportedValuesOf = Intl.supportedValuesOf as
       | ((key: "timeZone") => string[])
@@ -45,6 +46,58 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
 
     return FALLBACK_TIMEZONES;
   }, []);
+
+  const avatarPreviewUrl = useMemo(
+    () => (avatarFile ? URL.createObjectURL(avatarFile) : null),
+    [avatarFile],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreviewUrl) {
+        URL.revokeObjectURL(avatarPreviewUrl);
+      }
+    };
+  }, [avatarPreviewUrl]);
+
+  const activeAvatarUrl = avatarPreviewUrl ?? avatarUrl;
+  const hasAvatar = Boolean(avatarUrl.trim() || avatarPreviewUrl);
+
+  async function handleRemoveAvatar() {
+    if (!avatarUrl.trim()) {
+      setAvatarFile(null);
+      setMessage("Avatar cleared from the form.");
+      return;
+    }
+
+    setError(null);
+    setMessage(null);
+    setIsRemovingAvatar(true);
+
+    const response = await fetch("/api/profile/avatar", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        avatarUrl,
+      }),
+    });
+
+    if (!response.ok) {
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string }
+        | null;
+      setError(payload?.error ?? "Unable to remove your avatar right now.");
+      setIsRemovingAvatar(false);
+      return;
+    }
+
+    setAvatarUrl("");
+    setAvatarFile(null);
+    setMessage("Avatar removed. Save your profile to confirm the change.");
+    setIsRemovingAvatar(false);
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -162,6 +215,47 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
           <p className="mt-2 text-xs text-zinc-500">
             Upload a JPG, PNG, or WebP image up to 2MB.
           </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-4">
+            <span className="inline-flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5 text-base font-semibold text-white">
+              {activeAvatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  alt="Profile avatar preview"
+                  className="h-full w-full object-cover"
+                  src={activeAvatarUrl}
+                />
+              ) : (
+                (savedName || profile.email || "P").charAt(0).toUpperCase()
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-zinc-200">
+                {avatarFile
+                  ? `Selected: ${avatarFile.name}`
+                  : avatarUrl.trim()
+                    ? "Current profile avatar"
+                    : "No avatar uploaded"}
+              </p>
+              <p className="mt-1 text-xs text-zinc-500">
+                {avatarFile
+                  ? "Save your profile to upload this new image."
+                  : avatarUrl.trim()
+                    ? "Replace it with another file, or remove it below."
+                    : "Upload a square image for the cleanest result."}
+              </p>
+            </div>
+            {hasAvatar ? (
+              <Button
+                className="border border-white/10 bg-white/5 !text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={isRemovingAvatar || isSaving}
+                onClick={handleRemoveAvatar}
+                type="button"
+                variant="secondary"
+              >
+                {isRemovingAvatar ? "Removing..." : "Remove avatar"}
+              </Button>
+            ) : null}
+          </div>
         </label>
 
         <label className="block">
@@ -206,19 +300,19 @@ export function ProfileDetailsForm({ profile }: ProfileDetailsFormProps) {
             </p>
             <div className="mt-2 flex items-center gap-3">
               <span className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5 text-sm font-semibold text-white">
-                {avatarUrl.trim() ? (
+                {activeAvatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     alt="Profile avatar preview"
                     className="h-full w-full object-cover"
-                    src={avatarUrl}
+                    src={activeAvatarUrl}
                   />
                 ) : (
                   (savedName || profile.email || "P").charAt(0).toUpperCase()
                 )}
               </span>
               <p className="min-w-0 text-sm text-zinc-200">
-                {avatarUrl.trim() || "Not set yet"}
+                {avatarFile ? avatarFile.name : activeAvatarUrl || "Not set yet"}
               </p>
             </div>
           </div>

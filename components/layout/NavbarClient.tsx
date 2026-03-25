@@ -154,6 +154,9 @@ export function NavbarClient({
                       {userLabel}
                     </p>
                   ) : null}
+                  <p className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-zinc-400">
+                    Free plan
+                  </p>
                   <div className="mt-3 flex flex-col gap-2">
                     <Link
                       className="rounded-2xl px-4 py-3 text-sm text-white transition hover:bg-white/5"

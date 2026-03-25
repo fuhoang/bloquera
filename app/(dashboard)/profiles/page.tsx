@@ -1,10 +1,12 @@
 import { AccountSecurityForm } from "@/components/profile/AccountSecurityForm";
 import { ProfileDetailsForm } from "@/components/profile/ProfileDetailsForm";
+import { getAccountStatus } from "@/lib/account-status";
 import { getOrCreateProfile } from "@/lib/profile";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function ProfilesPage() {
   const profile = await getOrCreateProfile();
+  const accountStatus = getAccountStatus();
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
@@ -107,6 +109,42 @@ export default async function ProfilesPage() {
           email={profile.email}
           isEmailConfirmed={Boolean(user?.email_confirmed_at)}
         />
+
+        <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8">
+          <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
+            Plan and access
+          </p>
+          <div className="mt-5 grid gap-4 md:grid-cols-[1fr_0.9fr]">
+            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+              <p className="text-lg font-semibold text-white">{accountStatus.headline}</p>
+              <p className="mt-2 text-sm leading-7 text-zinc-300">
+                {accountStatus.billingStatus}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {accountStatus.includedFeatures.map((feature) => (
+                  <span
+                    key={feature}
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300"
+                  >
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+              <p className="text-sm font-semibold text-white">Billing hub</p>
+              <p className="mt-2 text-sm leading-7 text-zinc-300">
+                {accountStatus.nextStep}
+              </p>
+              <a
+                className="mt-4 inline-flex text-sm font-semibold text-orange-300"
+                href={accountStatus.ctaHref}
+              >
+                {accountStatus.ctaLabel}
+              </a>
+            </div>
+          </div>
+        </section>
 
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8">
           <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">

@@ -10,6 +10,30 @@ function sanitizeFilename(filename: string) {
   return filename.toLowerCase().replace(/[^a-z0-9.-]+/g, "-");
 }
 
+function getAvatarStoragePath(avatarUrl: string, userId: string) {
+  try {
+    const url = new URL(avatarUrl);
+    const marker = "/storage/v1/object/public/avatars/";
+    const markerIndex = url.pathname.indexOf(marker);
+
+    if (markerIndex === -1) {
+      return null;
+    }
+
+    const path = decodeURIComponent(
+      url.pathname.slice(markerIndex + marker.length),
+    );
+
+    if (!path.startsWith(`${userId}/`)) {
+      return null;
+    }
+
+    return path;
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(request: Request) {
   const supabase = await createServerSupabaseClient();
 
@@ -80,4 +104,55 @@ export async function POST(request: Request) {
     avatarUrl: data.publicUrl,
     path,
   });
+}
+
+export async function DELETE(request: Request) {
+  const supabase = await createServerSupabaseClient();
+
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Supabase is not configured." },
+      { status: 500 },
+    );
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "You must be logged in to remove an avatar." },
+      { status: 401 },
+    );
+  }
+
+  const body = (await request.json()) as { avatarUrl?: unknown };
+
+  if (typeof body.avatarUrl !== "string" || body.avatarUrl.trim().length === 0) {
+    return NextResponse.json(
+      { error: "Choose an avatar to remove first." },
+      { status: 400 },
+    );
+  }
+
+  const path = getAvatarStoragePath(body.avatarUrl, user.id);
+
+  if (!path) {
+    return NextResponse.json(
+      { error: "That avatar does not belong to this account." },
+      { status: 400 },
+    );
+  }
+
+  const { error } = await supabase.storage.from("avatars").remove([path]);
+
+  if (error) {
+    return NextResponse.json(
+      { error: "Unable to remove your avatar right now." },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({ removed: true });
 }

@@ -22,6 +22,18 @@ create table if not exists public.lesson_progress (
   primary key (user_id, lesson_slug)
 );
 
+create table if not exists public.learning_activity (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  activity_type text not null,
+  lesson_slug text not null,
+  lesson_title text not null,
+  correct_count integer,
+  total_questions integer,
+  passed boolean,
+  created_at timestamptz not null default timezone('utc'::text, now())
+);
+
 insert into storage.buckets (id, name, public)
 values ('avatars', 'avatars', true)
 on conflict (id) do update
@@ -29,6 +41,7 @@ set public = excluded.public;
 
 alter table public.profiles enable row level security;
 alter table public.lesson_progress enable row level security;
+alter table public.learning_activity enable row level security;
 
 drop policy if exists "Users can read their own profile" on public.profiles;
 drop policy if exists "Users can insert their own profile" on public.profiles;
@@ -36,6 +49,9 @@ drop policy if exists "Users can update their own profile" on public.profiles;
 drop policy if exists "Users can read their own lesson progress" on public.lesson_progress;
 drop policy if exists "Users can insert their own lesson progress" on public.lesson_progress;
 drop policy if exists "Users can delete their own lesson progress" on public.lesson_progress;
+drop policy if exists "Users can read their own learning activity" on public.learning_activity;
+drop policy if exists "Users can insert their own learning activity" on public.learning_activity;
+drop policy if exists "Users can delete their own learning activity" on public.learning_activity;
 drop policy if exists "Users can upload their own avatars" on storage.objects;
 drop policy if exists "Users can update their own avatars" on storage.objects;
 drop policy if exists "Users can delete their own avatars" on storage.objects;
@@ -73,6 +89,24 @@ with check (auth.uid() = user_id);
 
 create policy "Users can delete their own lesson progress"
 on public.lesson_progress
+for delete
+to authenticated
+using (auth.uid() = user_id);
+
+create policy "Users can read their own learning activity"
+on public.learning_activity
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+create policy "Users can insert their own learning activity"
+on public.learning_activity
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+create policy "Users can delete their own learning activity"
+on public.learning_activity
 for delete
 to authenticated
 using (auth.uid() = user_id);

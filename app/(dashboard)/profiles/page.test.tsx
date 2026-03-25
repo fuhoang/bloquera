@@ -75,6 +75,8 @@ describe("profiles page route", () => {
     expect(
       screen.getByText("Learning Bitcoin from first principles."),
     ).toBeInTheDocument();
+    expect(screen.getByText("Plan and access")).toBeInTheDocument();
+    expect(screen.getByText("Free plan")).toBeInTheDocument();
     expect(screen.getByTestId("profile-details-form")).toBeInTheDocument();
     expect(screen.getByTestId("account-security-form")).toBeInTheDocument();
   });

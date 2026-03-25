@@ -168,4 +168,68 @@ describe("ProfileDetailsForm", () => {
       }),
     );
   });
+
+  it("removes the current avatar before saving the profile", async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ removed: true }), { status: 200 }),
+      )
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            profile: {
+              ...profile,
+              avatar_url: null,
+            },
+          }),
+          { status: 200 },
+        ),
+      );
+
+    render(
+      <ProfileDetailsForm
+        profile={{
+          ...profile,
+          avatar_url:
+            "https://project.supabase.co/storage/v1/object/public/avatars/user-1/avatar.png",
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Remove avatar" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        1,
+        "/api/profile/avatar",
+        expect.objectContaining({
+          method: "DELETE",
+          body: JSON.stringify({
+            avatarUrl:
+              "https://project.supabase.co/storage/v1/object/public/avatars/user-1/avatar.png",
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }),
+      );
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Save profile" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        2,
+        "/api/profile",
+        expect.objectContaining({
+          body: JSON.stringify({
+            avatar_url: "",
+            bio: "",
+            display_name: "Satoshi",
+            timezone: "Europe/London",
+          }),
+        }),
+      );
+    });
+  });
 });
