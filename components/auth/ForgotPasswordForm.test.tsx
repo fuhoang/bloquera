@@ -56,4 +56,14 @@ describe("ForgotPasswordForm", () => {
       await screen.findByText("Password reset email sent. Check your inbox for the secure link."),
     ).toBeInTheDocument();
   });
+
+  it("renders an initial auth error from the page", () => {
+    render(<ForgotPasswordForm initialError="Recovery link expired." />);
+
+    expect(screen.getByText("Recovery link expired.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Return to login" })).toHaveAttribute(
+      "href",
+      "/auth/login",
+    );
+  });
 });

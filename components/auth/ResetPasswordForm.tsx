@@ -4,14 +4,28 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
+import {
+  getAuthErrorFromSearchParam,
+  getAuthMessageFromSearchParam,
+} from "@/lib/auth-feedback";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
-export function ResetPasswordForm() {
+export function ResetPasswordForm({
+  initialError,
+  initialMessage,
+}: {
+  initialError?: string | null;
+  initialMessage?: string | null;
+}) {
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    getAuthErrorFromSearchParam(initialError),
+  );
+  const [message, setMessage] = useState<string | null>(
+    getAuthMessageFromSearchParam(initialMessage),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -101,12 +115,14 @@ export function ResetPasswordForm() {
         {message ? (
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
             <p>{message}</p>
-            <Link
-              className="mt-3 inline-flex font-medium text-emerald-50 underline"
-              href="/auth/login"
-            >
-              Return to login
-            </Link>
+            {message.includes("updated") ? (
+              <Link
+                className="mt-3 inline-flex font-medium text-emerald-50 underline"
+                href="/auth/login?message=password_reset_complete"
+              >
+                Return to login
+              </Link>
+            ) : null}
           </div>
         ) : null}
 

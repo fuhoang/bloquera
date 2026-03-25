@@ -1,6 +1,16 @@
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
+import {
+  getAuthErrorFromSearchParam,
+  getAuthMessageFromSearchParam,
+} from "@/lib/auth-feedback";
 
-export default function ForgotPasswordPage() {
+export default async function ForgotPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; message?: string }>;
+}) {
+  const params = await searchParams;
+
   return (
     <main className="min-h-screen bg-zinc-950 px-6 py-16 text-white">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
@@ -14,7 +24,10 @@ export default function ForgotPasswordPage() {
             current password.
           </p>
         </div>
-        <ForgotPasswordForm />
+        <ForgotPasswordForm
+          initialError={getAuthErrorFromSearchParam(params.error)}
+          initialMessage={getAuthMessageFromSearchParam(params.message)}
+        />
       </div>
     </main>
   );

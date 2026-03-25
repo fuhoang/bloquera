@@ -1,16 +1,31 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 import { buildAuthCallbackUrl } from "@/lib/auth-redirects";
+import {
+  getAuthErrorFromSearchParam,
+  getAuthMessageFromSearchParam,
+} from "@/lib/auth-feedback";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
-export function ForgotPasswordForm() {
+export function ForgotPasswordForm({
+  initialError,
+  initialMessage,
+}: {
+  initialError?: string | null;
+  initialMessage?: string | null;
+}) {
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [email, setEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    getAuthErrorFromSearchParam(initialError),
+  );
+  const [message, setMessage] = useState<string | null>(
+    getAuthMessageFromSearchParam(initialMessage),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -87,6 +102,13 @@ export function ForgotPasswordForm() {
         >
           {isSubmitting ? "Sending reset link..." : "Send reset link"}
         </Button>
+
+        <Link
+          className="inline-flex text-sm font-medium text-zinc-400 transition hover:text-white"
+          href="/auth/login"
+        >
+          Return to login
+        </Link>
       </form>
     </div>
   );

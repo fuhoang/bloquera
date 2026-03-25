@@ -5,21 +5,20 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 import { buildAuthCallbackUrl, sanitizeNextPath } from "@/lib/auth-redirects";
+import {
+  getAuthErrorFromSearchParam,
+  getAuthMessageFromSearchParam,
+  getFriendlyAuthErrorMessage,
+} from "@/lib/auth-feedback";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
 type AuthFormProps = {
+  initialError?: string | null;
+  initialMessage?: string | null;
   mode: "login" | "register";
   nextPath: string;
 };
-
-function getFriendlyAuthErrorMessage(message: string) {
-  if (/email rate limit exceeded/i.test(message)) {
-    return "Too many email requests. Please wait a few minutes before trying again.";
-  }
-
-  return message;
-}
 
 async function syncAuthenticatedProfile() {
   try {
@@ -32,17 +31,34 @@ async function syncAuthenticatedProfile() {
   }
 }
 
-export function AuthForm({ mode, nextPath }: AuthFormProps) {
+export function AuthForm({
+  initialError,
+  initialMessage,
+  mode,
+  nextPath,
+}: AuthFormProps) {
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const safeNextPath = sanitizeNextPath(nextPath);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    getAuthErrorFromSearchParam(initialError),
+  );
+  const [message, setMessage] = useState<string | null>(
+    getAuthMessageFromSearchParam(initialMessage, nextPath),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResendingConfirmation, setIsResendingConfirmation] = useState(false);
   const [showResendConfirmation, setShowResendConfirmation] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    setError(getAuthErrorFromSearchParam(initialError));
+  }, [initialError]);
+
+  useEffect(() => {
+    setMessage(getAuthMessageFromSearchParam(initialMessage, nextPath));
+  }, [initialMessage, nextPath]);
 
   useEffect(() => {
     if (resendCooldown <= 0) {
@@ -79,7 +95,7 @@ export function AuthForm({ mode, nextPath }: AuthFormProps) {
     });
 
     if (oauthError) {
-      setError(oauthError.message);
+      setError(getFriendlyAuthErrorMessage(oauthError.message));
       setIsSubmitting(false);
       return;
     }
@@ -109,7 +125,7 @@ export function AuthForm({ mode, nextPath }: AuthFormProps) {
       });
 
       if (loginError) {
-        setError(loginError.message);
+        setError(getFriendlyAuthErrorMessage(loginError.message));
         setShowResendConfirmation(/confirm/i.test(loginError.message));
         setIsSubmitting(false);
         return;
@@ -129,7 +145,7 @@ export function AuthForm({ mode, nextPath }: AuthFormProps) {
     });
 
     if (signUpError) {
-      setError(signUpError.message);
+      setError(getFriendlyAuthErrorMessage(signUpError.message));
       setIsSubmitting(false);
       return;
     }

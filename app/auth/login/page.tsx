@@ -1,13 +1,19 @@
 import { AuthForm } from "@/components/auth/AuthForm";
+import {
+  getAuthErrorFromSearchParam,
+  getAuthMessageFromSearchParam,
+} from "@/lib/auth-feedback";
 import { sanitizeNextPath } from "@/lib/auth-redirects";
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string; message?: string }>;
 }) {
   const params = await searchParams;
   const nextPath = sanitizeNextPath(params.next);
+  const initialError = getAuthErrorFromSearchParam(params.error);
+  const initialMessage = getAuthMessageFromSearchParam(params.message, nextPath);
 
   return (
     <main className="min-h-screen bg-zinc-950 px-6 py-16 text-white">
@@ -22,7 +28,12 @@ export default async function LoginPage({
             progress persistence for BlockWise.
           </p>
         </div>
-        <AuthForm mode="login" nextPath={nextPath} />
+        <AuthForm
+          initialError={initialError}
+          initialMessage={initialMessage}
+          mode="login"
+          nextPath={nextPath}
+        />
       </div>
     </main>
   );

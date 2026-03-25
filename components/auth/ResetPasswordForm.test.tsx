@@ -44,7 +44,17 @@ describe("ResetPasswordForm", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Return to login" })).toHaveAttribute(
       "href",
-      "/auth/login",
+      "/auth/login?message=password_reset_complete",
     );
+  });
+
+  it("renders a recovery-ready message from the callback state", () => {
+    render(
+      <ResetPasswordForm initialMessage="Reset link verified. Choose your new password below." />,
+    );
+
+    expect(
+      screen.getByText("Reset link verified. Choose your new password below."),
+    ).toBeInTheDocument();
   });
 });

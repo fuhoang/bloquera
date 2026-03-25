@@ -196,9 +196,27 @@ describe("AuthForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "Continue with Google" }));
 
     expect(
-      await screen.findByText("Provider is not configured"),
+      await screen.findByText(
+        "Google sign-in is not fully configured yet. Use email login for now or finish the provider setup in Supabase.",
+      ),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Log in" })).not.toBeDisabled();
+  });
+
+  it("renders an initial auth message from the page", () => {
+    createBrowserSupabaseClient.mockReturnValue(null);
+
+    render(
+      <AuthForm
+        initialMessage="Email confirmed. You can now log in."
+        mode="login"
+        nextPath="/learn"
+      />,
+    );
+
+    expect(
+      screen.getByText("Email confirmed. You can now log in."),
+    ).toBeInTheDocument();
   });
 
   it("sanitizes unsafe next paths before starting Google OAuth", async () => {
