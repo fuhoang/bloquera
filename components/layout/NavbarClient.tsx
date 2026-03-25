@@ -43,10 +43,10 @@ export function NavbarClient({
           >
             <span
               aria-hidden="true"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5"
             >
               <svg
-                className="h-7 w-7"
+                className="h-8 w-8"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@ export function NavbarClient({
               </svg>
             </span>
             <span
-              className="text-center text-xl uppercase tracking-[0.08em] text-white sm:text-2xl"
+              className="text-center text-2xl uppercase tracking-[0.08em] text-white sm:text-3xl"
               style={{ fontFamily: BRAND_FONT_STACK }}
             >
               BlockWise
@@ -108,10 +108,10 @@ export function NavbarClient({
         >
           <span
             aria-hidden="true"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 bg-white/5"
           >
             <svg
-              className="h-8 w-8"
+              className="h-9 w-9"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +128,7 @@ export function NavbarClient({
             </svg>
           </span>
           <span
-            className="text-center text-xl uppercase tracking-[0.08em] text-white sm:text-2xl md:text-3xl"
+            className="text-center text-2xl uppercase tracking-[0.08em] text-white sm:text-3xl md:text-4xl"
             style={{ fontFamily: BRAND_FONT_STACK }}
           >
             BlockWise
