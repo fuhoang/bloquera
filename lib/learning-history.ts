@@ -73,9 +73,23 @@ export function sanitizeLearningHistory(value: unknown): LearningHistory {
           typeof record.prompt === "string" &&
           record.prompt.length > 0 &&
           typeof record.repliedAt === "string" &&
+          (record.responsePreview === null ||
+            typeof record.responsePreview === "string") &&
+          (record.topic === null || typeof record.topic === "string") &&
           isIsoDate(record.repliedAt),
       )
     : [];
+
+  const dedupedTutorPrompts = Array.from(
+    new Map(
+      tutorPrompts
+        .sort(
+          (left, right) =>
+            Date.parse(right.repliedAt) - Date.parse(left.repliedAt),
+        )
+        .map((record) => [`${record.prompt}::${record.repliedAt}`, record]),
+    ).values(),
+  );
 
   return {
     lessonCompletions: dedupedLessonCompletions,
@@ -85,12 +99,49 @@ export function sanitizeLearningHistory(value: unknown): LearningHistory {
           Date.parse(right.attemptedAt) - Date.parse(left.attemptedAt),
       )
       .slice(0, MAX_QUIZ_ATTEMPTS),
-    tutorPrompts: tutorPrompts
-      .sort(
-        (left, right) =>
-          Date.parse(right.repliedAt) - Date.parse(left.repliedAt),
-      )
-      .slice(0, MAX_TUTOR_PROMPTS),
+    tutorPrompts: dedupedTutorPrompts.slice(0, MAX_TUTOR_PROMPTS),
+  };
+}
+
+function toUtcDateKey(value: string) {
+  return new Date(value).toISOString().slice(0, 10);
+}
+
+function shiftUtcDateKey(dateKey: string, days: number) {
+  const date = new Date(`${dateKey}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+export function getLearningAnalytics(history: LearningHistory) {
+  const activityDateKeys = Array.from(
+    new Set(
+      [
+        ...history.lessonCompletions.map((entry) => toUtcDateKey(entry.completedAt)),
+        ...history.quizAttempts.map((entry) => toUtcDateKey(entry.attemptedAt)),
+        ...history.tutorPrompts.map((entry) => toUtcDateKey(entry.repliedAt)),
+      ].sort((left, right) => right.localeCompare(left)),
+    ),
+  );
+
+  const activityDates = new Set(activityDateKeys);
+  let streakDays = 0;
+  let cursor = new Date().toISOString().slice(0, 10);
+
+  while (activityDates.has(cursor)) {
+    streakDays += 1;
+    cursor = shiftUtcDateKey(cursor, -1);
+  }
+
+  const passedQuizCount = history.quizAttempts.filter((entry) => entry.passed).length;
+
+  return {
+    activeDays: activityDateKeys.length,
+    latestTutorPrompt: history.tutorPrompts[0] ?? null,
+    passedQuizCount,
+    streakDays,
+    totalTutorPrompts: history.tutorPrompts.length,
+    totalQuizAttempts: history.quizAttempts.length,
   };
 }
 

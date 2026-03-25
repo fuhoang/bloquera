@@ -16,6 +16,8 @@ export interface QuizAttemptRecord {
 export interface TutorPromptRecord {
   prompt: string;
   repliedAt: string;
+  responsePreview: string | null;
+  topic: string | null;
 }
 
 export interface LearningHistory {

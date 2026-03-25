@@ -61,6 +61,11 @@ describe("useLearningHistory", () => {
     expect(result.current.quizAttempts).toHaveLength(1);
     expect(result.current.lessonCompletions).toHaveLength(1);
     expect(result.current.tutorPrompts).toHaveLength(1);
+    expect(result.current.tutorPrompts[0]).toMatchObject({
+      prompt: "How does Bitcoin supply work?",
+      responsePreview: null,
+      topic: null,
+    });
     expect(result.current.quizAttempts[0]).toMatchObject({
       lessonSlug: "what-is-money",
       passed: true,

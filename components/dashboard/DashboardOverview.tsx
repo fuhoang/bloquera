@@ -8,6 +8,7 @@ import { QuizCard } from "@/components/quiz/QuizCard";
 import { getAccountStatus } from "@/lib/account-status";
 import { useLearningHistory } from "@/hooks/useLearningHistory";
 import { useLessonProgress } from "@/hooks/useLessonProgress";
+import { getLearningAnalytics } from "@/lib/learning-history";
 import {
   getCompletedModuleLessonCount,
   getCurrentModule,
@@ -32,6 +33,11 @@ export function DashboardOverview({
   const accountStatus = getAccountStatus();
   const { completedCount, completedLessonSlugs, loaded } = useLessonProgress();
   const { lessonCompletions, quizAttempts, tutorPrompts } = useLearningHistory();
+  const learningAnalytics = getLearningAnalytics({
+    lessonCompletions,
+    quizAttempts,
+    tutorPrompts,
+  });
   const currentModule = getCurrentModule(modules, completedLessonSlugs);
   const nextLesson = currentModule
     ? getNextModuleLesson(currentModule, completedLessonSlugs)
@@ -129,6 +135,23 @@ export function DashboardOverview({
             label="Account"
             value={profileLabel}
             helper={`${accountStatus.headline} · ${accountStatus.billingStatus}`}
+          />
+        </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <SummaryCard
+            label="Learning streak"
+            value={`${learningAnalytics.streakDays} day${learningAnalytics.streakDays === 1 ? "" : "s"}`}
+            helper="Consecutive days with tracked learning activity"
+          />
+          <SummaryCard
+            label="Tutor sessions"
+            value={String(learningAnalytics.totalTutorPrompts)}
+            helper="Saved AI tutor prompts in your history"
+          />
+          <SummaryCard
+            label="Checks passed"
+            value={`${learningAnalytics.passedQuizCount} / ${learningAnalytics.totalQuizAttempts}`}
+            helper="Passed quiz attempts across your dashboard history"
           />
         </div>
         <div className="mt-8 space-y-3">
@@ -360,7 +383,17 @@ export function DashboardOverview({
                       key={`${entry.prompt}-${entry.repliedAt}`}
                       className="rounded-3xl border border-black/8 bg-white/75 p-4"
                     >
-                      <p className="text-sm font-semibold">{entry.prompt}</p>
+                      {entry.topic ? (
+                        <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+                          {entry.topic}
+                        </p>
+                      ) : null}
+                      <p className="mt-2 text-sm font-semibold">{entry.prompt}</p>
+                      {entry.responsePreview ? (
+                        <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                          {entry.responsePreview}
+                        </p>
+                      ) : null}
                       <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
                         {formatRelativeTimestamp(entry.repliedAt)}
                       </p>

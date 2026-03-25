@@ -1,12 +1,21 @@
 import { NextResponse } from "next/server";
 
 import { checkRateLimit } from "@/lib/rate-limit";
-import { createTutorReply } from "@/lib/openai";
+import { createTutorReply, inferTutorTopic } from "@/lib/openai";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const MAX_MESSAGE_LENGTH = 500;
 const CHAT_RATE_LIMIT = 10;
 const CHAT_RATE_WINDOW_MS = 60_000;
+const TUTOR_PROMPT_PREVIEW_MAX = 160;
+
+function buildTutorUsage(limitResult: { remaining: number; resetAt: number }) {
+  return {
+    limit: CHAT_RATE_LIMIT,
+    remaining: limitResult.remaining,
+    resetAt: limitResult.resetAt,
+  };
+}
 
 export async function POST(request: Request) {
   try {
@@ -72,8 +81,26 @@ export async function POST(request: Request) {
     }
 
     const reply = await createTutorReply(message);
+    const topic = inferTutorTopic(message);
+    const responsePreview = reply.slice(0, TUTOR_PROMPT_PREVIEW_MAX);
+    const recordedAt = new Date().toISOString();
 
-    return NextResponse.json({ reply });
+    void supabase.from("learning_activity").insert({
+      activity_context: topic,
+      activity_type: "tutor_prompt",
+      created_at: recordedAt,
+      lesson_slug: "ai-tutor",
+      lesson_title: message,
+      response_preview: responsePreview,
+      user_id: user.id,
+    });
+
+    return NextResponse.json({
+      reply,
+      recordedAt,
+      topic,
+      usage: buildTutorUsage(limitResult),
+    });
   } catch {
     return NextResponse.json(
       { error: "Unable to process your request right now." },

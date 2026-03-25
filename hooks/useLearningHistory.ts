@@ -46,7 +46,10 @@ function persistActivity(activity: {
   lessonSlug: string;
   lessonTitle: string;
   passed?: boolean;
+  repliedAt?: string;
   totalQuestions?: number;
+  responsePreview?: string | null;
+  topic?: string | null;
   type: "lesson_completion" | "quiz_attempt" | "tutor_prompt";
 }) {
   void fetch("/api/activity", {
@@ -183,7 +186,14 @@ export function useLearningHistory() {
     [],
   );
 
-  const recordTutorPrompt = useCallback((prompt: string) => {
+  const recordTutorPrompt = useCallback((
+    prompt: string,
+    metadata?: {
+      repliedAt?: string;
+      responsePreview?: string | null;
+      topic?: string | null;
+    },
+  ) => {
     const trimmedPrompt = prompt.trim();
 
     if (!trimmedPrompt) {
@@ -192,6 +202,8 @@ export function useLearningHistory() {
 
     const current = readHistorySnapshot();
 
+    const repliedAt = metadata?.repliedAt ?? new Date().toISOString();
+
     writeHistory(
       mergeLearningHistory(current, {
         lessonCompletions: [],
@@ -199,7 +211,9 @@ export function useLearningHistory() {
         tutorPrompts: [
           {
             prompt: trimmedPrompt,
-            repliedAt: new Date().toISOString(),
+            repliedAt,
+            responsePreview: metadata?.responsePreview ?? null,
+            topic: metadata?.topic ?? null,
           },
         ],
       }),
@@ -207,6 +221,9 @@ export function useLearningHistory() {
     persistActivity({
       lessonSlug: "ai-tutor",
       lessonTitle: trimmedPrompt,
+      repliedAt,
+      responsePreview: metadata?.responsePreview ?? null,
+      topic: metadata?.topic ?? null,
       type: "tutor_prompt",
     });
   }, []);

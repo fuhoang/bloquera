@@ -36,6 +36,8 @@ type ActivityInsertBody =
       lessonSlug?: string;
       lessonTitle?: string;
       repliedAt?: string;
+      responsePreview?: string;
+      topic?: string;
     };
 
 async function readCookieHistory() {
@@ -89,7 +91,7 @@ async function readSupabaseHistory() {
   const { data, error } = await supabase
     .from("learning_activity")
     .select(
-      "activity_type, lesson_slug, lesson_title, correct_count, total_questions, passed, created_at",
+      "activity_type, lesson_slug, lesson_title, correct_count, total_questions, passed, created_at, activity_context, response_preview",
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
@@ -123,6 +125,8 @@ async function readSupabaseHistory() {
         .map((row) => ({
           prompt: row.lesson_title,
           repliedAt: row.created_at,
+          responsePreview: row.response_preview ?? null,
+          topic: row.activity_context ?? null,
         })),
     }),
     persisted: true,
@@ -165,6 +169,12 @@ function sanitizeActivityInsert(body: ActivityInsertBody) {
         !Number.isNaN(Date.parse(body.repliedAt))
           ? body.repliedAt
           : new Date().toISOString(),
+      responsePreview:
+        typeof body.responsePreview === "string" && body.responsePreview.length > 0
+          ? body.responsePreview
+          : null,
+      topic:
+        typeof body.topic === "string" && body.topic.length > 0 ? body.topic : null,
     };
   }
 
@@ -266,10 +276,12 @@ async function writeSupabaseHistory(body: ActivityInsertBody) {
             user_id: user.id,
           }
         : {
+            activity_context: nextActivity.topic,
             activity_type: "tutor_prompt",
             created_at: nextActivity.repliedAt,
             lesson_slug: nextActivity.lessonSlug,
             lesson_title: nextActivity.lessonTitle,
+            response_preview: nextActivity.responsePreview,
             user_id: user.id,
           };
 
@@ -353,6 +365,8 @@ export async function POST(request: Request) {
               {
                 prompt: nextActivity.lessonTitle,
                 repliedAt: nextActivity.repliedAt,
+                responsePreview: nextActivity.responsePreview,
+                topic: nextActivity.topic,
               } satisfies TutorPromptRecord,
             ],
           });

@@ -5,6 +5,12 @@ import { useCallback, useState } from "react";
 import { useLearningHistory } from "@/hooks/useLearningHistory";
 import type { ChatMessage } from "@/types/chat";
 
+type TutorUsage = {
+  limit: number;
+  remaining: number;
+  resetAt: number;
+};
+
 const welcomeMessage: ChatMessage = {
   id: "welcome",
   role: "assistant",
@@ -16,6 +22,7 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
   const [messages, setMessages] = useState<ChatMessage[]>([...initialMessages]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [usage, setUsage] = useState<TutorUsage | null>(null);
   const { recordTutorPrompt } = useLearningHistory();
 
   const sendMessage = useCallback(async (content: string) => {
@@ -48,6 +55,9 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
       const data = (await response.json()) as {
         error?: string;
         reply?: string;
+        recordedAt?: string;
+        topic?: string;
+        usage?: TutorUsage;
       };
 
       if (!response.ok || !data.reply) {
@@ -55,6 +65,7 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
       }
 
       const reply = data.reply;
+      setUsage(data.usage ?? null);
 
       setMessages((current) => [
         ...current,
@@ -64,7 +75,11 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
           content: reply,
         },
       ]);
-      recordTutorPrompt(trimmedContent);
+      recordTutorPrompt(trimmedContent, {
+        repliedAt: data.recordedAt,
+        responsePreview: reply.slice(0, 160),
+        topic: data.topic ?? null,
+      });
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
@@ -77,5 +92,5 @@ export function useChat(initialMessages: ChatMessage[] = [welcomeMessage]) {
     }
   }, [recordTutorPrompt]);
 
-  return { messages, isLoading, error, sendMessage };
+  return { messages, isLoading, error, sendMessage, usage };
 }

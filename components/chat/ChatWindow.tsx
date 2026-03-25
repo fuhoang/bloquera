@@ -30,7 +30,7 @@ export function ChatWindow({
   submittedPromptVersion?: number;
   onClose?: () => void;
 }) {
-  const { messages, isLoading, error, sendMessage } = useChat(SEEDED_MESSAGES);
+  const { messages, isLoading, error, sendMessage, usage } = useChat(SEEDED_MESSAGES);
   const lastSubmittedPromptVersion = useRef(0);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -75,6 +75,11 @@ export function ChatWindow({
         ) : null}
       </div>
       <div className="mb-2 flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-2">
+        {usage ? (
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-zinc-400">
+            {usage.remaining} of {usage.limit} tutor requests left this minute
+          </div>
+        ) : null}
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />
         ))}

@@ -4,9 +4,12 @@ const createTutorReply = vi.fn();
 const getUser = vi.fn();
 const createServerSupabaseClient = vi.fn();
 const checkRateLimit = vi.fn();
+const insert = vi.fn();
+const from = vi.fn();
 
 vi.mock("@/lib/openai", () => ({
   createTutorReply: (message: string) => createTutorReply(message),
+  inferTutorTopic: () => "Bitcoin foundations",
 }));
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -23,10 +26,13 @@ describe("chat route", () => {
     getUser.mockReset();
     createServerSupabaseClient.mockReset();
     checkRateLimit.mockReset();
+    insert.mockReset();
+    from.mockReset();
     createServerSupabaseClient.mockResolvedValue({
       auth: {
         getUser,
       },
+      from,
     });
     getUser.mockResolvedValue({
       data: {
@@ -40,6 +46,10 @@ describe("chat route", () => {
       remaining: 9,
       resetAt: Date.now() + 60_000,
     });
+    from.mockReturnValue({
+      insert,
+    });
+    insert.mockResolvedValue({ error: null });
   });
 
   it("rejects empty messages", async () => {
@@ -94,8 +104,25 @@ describe("chat route", () => {
     );
 
     expect(createTutorReply).toHaveBeenCalledWith("What is Bitcoin?");
+    expect(from).toHaveBeenCalledWith("learning_activity");
+    expect(insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activity_type: "tutor_prompt",
+        lesson_slug: "ai-tutor",
+        lesson_title: "What is Bitcoin?",
+      }),
+    );
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toEqual({ reply: "Bitcoin reply" });
+    await expect(response.json()).resolves.toEqual({
+      reply: "Bitcoin reply",
+      recordedAt: expect.any(String),
+      topic: "Bitcoin foundations",
+      usage: {
+        limit: 10,
+        remaining: 9,
+        resetAt: expect.any(Number),
+      },
+    });
   });
 
   it("rate limits repeated tutor requests", async () => {

@@ -28,11 +28,16 @@ create table if not exists public.learning_activity (
   activity_type text not null,
   lesson_slug text not null,
   lesson_title text not null,
+  activity_context text,
   correct_count integer,
   total_questions integer,
   passed boolean,
+  response_preview text,
   created_at timestamptz not null default timezone('utc'::text, now())
 );
+
+alter table public.learning_activity add column if not exists activity_context text;
+alter table public.learning_activity add column if not exists response_preview text;
 
 insert into storage.buckets (id, name, public)
 values ('avatars', 'avatars', true)

@@ -111,6 +111,8 @@ describe("activity route", () => {
           lessonSlug: "ai-tutor",
           lessonTitle: "How does Bitcoin supply work?",
           repliedAt: "2026-03-25T18:10:00.000Z",
+          responsePreview: "Bitcoin supply is capped at 21 million.",
+          topic: "Bitcoin foundations",
         }),
       }),
     );
@@ -121,6 +123,8 @@ describe("activity route", () => {
       {
         prompt: "How does Bitcoin supply work?",
         repliedAt: "2026-03-25T18:10:00.000Z",
+        responsePreview: "Bitcoin supply is capped at 21 million.",
+        topic: "Bitcoin foundations",
       },
     ]);
   });

@@ -132,6 +132,8 @@ describe("DashboardOverview", () => {
     expect(screen.getByText("No active subscription")).toBeInTheDocument();
     expect(screen.getByText("What Is Bitcoin?")).toBeInTheDocument();
     expect(screen.getByText("No tutor prompts yet")).toBeInTheDocument();
+    expect(screen.getByText("0 days")).toBeInTheDocument();
+    expect(screen.getByText("0 / 0")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Open next lesson" })).toHaveAttribute(
       "href",
       "/learn/what-is-bitcoin",
@@ -176,6 +178,8 @@ describe("DashboardOverview", () => {
         {
           prompt: "Why does Bitcoin have a fixed supply?",
           repliedAt: "2026-03-25T11:10:00.000Z",
+          responsePreview: "Bitcoin supply is capped and follows a fixed issuance schedule.",
+          topic: "Bitcoin foundations",
         },
       ],
       recordLessonCompleted: vi.fn(),
@@ -198,5 +202,7 @@ describe("DashboardOverview", () => {
     expect(screen.getByText("Protected account")).toBeInTheDocument();
     expect(screen.getByText("Tutor session")).toBeInTheDocument();
     expect(screen.getAllByText("Why does Bitcoin have a fixed supply?")[0]).toBeInTheDocument();
+    expect(screen.getByText("Bitcoin supply is capped and follows a fixed issuance schedule.")).toBeInTheDocument();
+    expect(screen.getAllByText("Bitcoin foundations")).not.toHaveLength(0);
   });
 });
