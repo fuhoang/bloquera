@@ -32,6 +32,7 @@ const previousLesson: LessonMeta = {
   summary: "Money basics",
   duration: "8 min",
   order: 1,
+  track: "bitcoin",
   section: "Foundations",
 };
 
@@ -41,6 +42,7 @@ const nextLesson: LessonMeta = {
   summary: "Bitcoin basics",
   duration: "12 min",
   order: 2,
+  track: "bitcoin",
   section: "Foundations",
 };
 

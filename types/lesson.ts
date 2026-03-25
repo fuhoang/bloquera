@@ -4,6 +4,7 @@ export interface LessonMeta {
   summary: string;
   duration: string;
   order: number;
+  track: string;
   section?: string;
 }
 
@@ -16,5 +17,14 @@ export interface ModuleMeta {
   title: string;
   description: string;
   order: number;
+  track: string;
   lessons: LessonMeta[];
+}
+
+export interface TrackMeta {
+  slug: string;
+  title: string;
+  description: string;
+  order: number;
+  status: "available" | "planned";
 }

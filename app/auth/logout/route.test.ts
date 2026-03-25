@@ -1,5 +1,10 @@
 const signOut = vi.fn();
 const createServerSupabaseClient = vi.fn();
+const cookies = vi.fn();
+
+vi.mock("next/headers", () => ({
+  cookies,
+}));
 
 vi.mock("@/lib/supabase/server", () => ({
   createServerSupabaseClient: () => createServerSupabaseClient(),
@@ -9,6 +14,9 @@ describe("auth logout route", () => {
   beforeEach(() => {
     signOut.mockReset();
     createServerSupabaseClient.mockReset();
+    cookies.mockResolvedValue({
+      getAll: () => [],
+    });
   });
 
   it("signs out and redirects to the homepage", async () => {

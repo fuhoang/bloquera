@@ -166,7 +166,7 @@ export default function HomePage() {
               <div className="rounded-[1.75rem] border border-white/10 bg-black/40 p-3 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
                 <input
                   className="w-full bg-transparent px-2 py-2 text-sm text-white outline-none placeholder:text-zinc-500"
-                  placeholder="Ask anything about bitcoin..."
+                  placeholder="Ask anything about crypto..."
                   value={prompt}
                   onChange={(event) => setPrompt(event.target.value)}
                   onKeyDown={(event) => {

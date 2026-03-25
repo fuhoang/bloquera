@@ -2,22 +2,27 @@
 
 import Link from "next/link";
 
-import type { ModuleMeta } from "@/types/lesson";
+import type { ModuleMeta, TrackMeta } from "@/types/lesson";
 
 import { useLessonProgress } from "@/hooks/useLessonProgress";
 import { getCompletedModuleLessonCount } from "@/lib/module-progress";
 
 type LearnOverviewProps = {
+  currentTrack: TrackMeta;
   modules: ModuleMeta[];
   totalLessons: number;
+  tracks: TrackMeta[];
 };
 
 export function LearnOverview({
+  currentTrack,
   modules,
   totalLessons,
+  tracks,
 }: LearnOverviewProps) {
   const { completedCount, completedLessonSlugs, isLessonCompleted, loaded } =
     useLessonProgress();
+  const plannedTracks = tracks.filter((track) => track.status === "planned");
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -33,6 +38,12 @@ export function LearnOverview({
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
+            <div className="rounded-xl border border-orange-500/20 bg-orange-500/10 px-4 py-3">
+              <p className="text-sm text-orange-200">Active track</p>
+              <p className="mt-1 text-lg font-semibold text-white">
+                {currentTrack.title}
+              </p>
+            </div>
             <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
               <p className="text-sm text-zinc-400">Progress</p>
               <p className="mt-1 text-lg font-semibold text-white">
@@ -45,6 +56,14 @@ export function LearnOverview({
               <p className="text-sm text-zinc-400">Level</p>
               <p className="mt-1 text-lg font-semibold text-white">Beginner</p>
             </div>
+            {plannedTracks.length > 0 ? (
+              <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                <p className="text-sm text-zinc-400">Next track</p>
+                <p className="mt-1 text-lg font-semibold text-white">
+                  {plannedTracks[0].title}
+                </p>
+              </div>
+            ) : null}
           </div>
         </div>
       </section>

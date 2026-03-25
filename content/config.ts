@@ -1,6 +1,6 @@
-import type { LessonMeta, ModuleMeta } from "@/types/lesson";
+import type { LessonMeta, ModuleMeta, TrackMeta } from "@/types/lesson";
 
-export const lessonConfig: LessonMeta[] = [
+const lessonDefinitions: Omit<LessonMeta, "track">[] = [
   {
     slug: "what-is-money",
     title: "What Is Money?",
@@ -363,6 +363,28 @@ export const lessonConfig: LessonMeta[] = [
   },
 ];
 
+export const trackConfig: TrackMeta[] = [
+  {
+    slug: "bitcoin",
+    title: "Bitcoin",
+    description: "The current live track focused on money, self-custody, and network fundamentals.",
+    order: 1,
+    status: "available",
+  },
+  {
+    slug: "ethereum",
+    title: "Ethereum",
+    description: "Planned next track covering Ethereum basics, wallets, and network concepts.",
+    order: 2,
+    status: "planned",
+  },
+];
+
+export const lessonConfig: LessonMeta[] = lessonDefinitions.map((lesson) => ({
+  ...lesson,
+  track: "bitcoin",
+}));
+
 const moduleDefinitions = [
   {
     slug: "foundations",
@@ -417,6 +439,7 @@ export const moduleConfig: ModuleMeta[] = moduleDefinitions.map(
   (module, index) => ({
     ...module,
     order: index + 1,
+    track: "bitcoin",
     lessons: lessonConfig
       .filter((lesson) => lesson.section === module.title)
       .sort((a, b) => a.order - b.order),

@@ -10,6 +10,7 @@ const moduleData: ModuleMeta = {
   title: "Foundations",
   description: "Understand the basics before anything else",
   order: 1,
+  track: "bitcoin",
   lessons: [
     {
       slug: "what-is-money",
@@ -17,6 +18,7 @@ const moduleData: ModuleMeta = {
       summary: "Money basics",
       duration: "8 min",
       order: 1,
+      track: "bitcoin",
       section: "Foundations",
     },
     {
@@ -25,6 +27,7 @@ const moduleData: ModuleMeta = {
       summary: "Bitcoin basics",
       duration: "12 min",
       order: 2,
+      track: "bitcoin",
       section: "Foundations",
     },
     {
@@ -33,6 +36,7 @@ const moduleData: ModuleMeta = {
       summary: "Bitcoin importance",
       duration: "8 min",
       order: 3,
+      track: "bitcoin",
       section: "Foundations",
     },
   ],

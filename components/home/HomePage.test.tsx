@@ -71,7 +71,7 @@ describe("HomePage", () => {
   it("opens the conversation with the submitted prompt when clicking Ask", () => {
     render(<HomePage />);
 
-    fireEvent.change(screen.getByPlaceholderText("Ask anything about bitcoin..."), {
+    fireEvent.change(screen.getByPlaceholderText("Ask anything about crypto..."), {
       target: { value: "Explain Bitcoin simply" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Ask" }));
@@ -83,10 +83,10 @@ describe("HomePage", () => {
   it("opens the conversation when pressing Enter in the prompt", () => {
     render(<HomePage />);
 
-    fireEvent.change(screen.getByPlaceholderText("Ask anything about bitcoin..."), {
+    fireEvent.change(screen.getByPlaceholderText("Ask anything about crypto..."), {
       target: { value: "What gives Bitcoin value?" },
     });
-    fireEvent.keyDown(screen.getByPlaceholderText("Ask anything about bitcoin..."), {
+    fireEvent.keyDown(screen.getByPlaceholderText("Ask anything about crypto..."), {
       key: "Enter",
     });
 
