@@ -1,12 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import type { Route } from "next";
 import Link from "next/link";
 
-import { ChatWindow } from "@/components/chat/ChatWindow";
 import { moduleConfig } from "@/content/config";
+import { publicGuides } from "@/lib/public-guides";
 import { SoftAurora } from "@/components/home/SoftAurora";
+
+const ChatWindow = dynamic(
+  () => import("@/components/chat/ChatWindow").then((module) => module.ChatWindow),
+  { ssr: false },
+);
 
 const MODULE_ACCENTS = [
   {
@@ -58,6 +64,30 @@ const PRICING_PLANS = [
     description:
       "Full curriculum, more AI usage, quizzes, progress tracking, and deeper security lessons with a fixed annual price.",
     footnote: "Save compared with the monthly plan.",
+  },
+] as const;
+
+const PUBLIC_GUIDES = publicGuides;
+const HOME_FAQ = [
+  {
+    question: "Is Blockwise for complete beginners?",
+    answer:
+      "Yes. The public guides and live curriculum are designed for people who want plain-language explanations and a clearer starting path into crypto.",
+  },
+  {
+    question: "Why does Blockwise start with Bitcoin?",
+    answer:
+      "Bitcoin is the live learning track today and gives beginners a strong foundation in money, ownership, wallets, and network trust before newer tracks arrive.",
+  },
+  {
+    question: "Do I need to buy crypto to use Blockwise?",
+    answer:
+      "No. You can use the guides, lessons, and tutor to learn the concepts first and build judgment before deciding whether ownership makes sense for you.",
+  },
+  {
+    question: "Will Blockwise cover more than Bitcoin later?",
+    answer:
+      "Yes. The product is designed for multiple crypto tracks over time, while keeping the current live learning path focused and coherent.",
   },
 ] as const;
 
@@ -203,11 +233,12 @@ export default function HomePage() {
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-sm text-zinc-500">Curriculum</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              A clearer path into Bitcoin.
+              A clearer path into crypto.
             </h2>
             <p className="mt-4 text-base leading-8 text-zinc-400">
-              Start with the basics, move into security and transactions, and
-              use AI prompts for deeper understanding.
+              Start with the live Bitcoin track, build confidence around
+              security and transactions, and use AI prompts for deeper
+              understanding as more tracks arrive.
             </p>
           </div>
 
@@ -250,6 +281,74 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section id="guides" className="border-t border-white/10">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm text-zinc-500">Public guides</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+              Start with indexable guides, then go deeper inside the product.
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-zinc-400">
+              These public pages explain the basics clearly, give search engines
+              real educational content to index, and point beginners toward the
+              live Bitcoin track inside Blockwise.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-10 grid max-w-6xl gap-4 lg:grid-cols-3">
+            {PUBLIC_GUIDES.map((guide) => (
+              <article
+                key={guide.id}
+                className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 text-left"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-300">
+                  {guide.eyebrow}
+                </p>
+                <h3 className="mt-4 text-2xl font-semibold text-white">
+                  {guide.title}
+                </h3>
+                <p className="mt-4 text-sm leading-7 text-zinc-400">
+                  {guide.summary}
+                </p>
+                <Link
+                  href={guide.href}
+                  className="mt-6 inline-flex items-center text-sm font-semibold text-orange-300 transition hover:text-orange-200"
+                >
+                  Read guide
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-white/10">
+        <div className="mx-auto max-w-5xl px-6 py-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm text-zinc-500">FAQ</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+              Common questions before you start learning.
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-zinc-400">
+              The public guides explain the basics, and these answers clarify how
+              Blockwise is positioned today.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-4">
+            {HOME_FAQ.map((item) => (
+              <article
+                key={item.question}
+                className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6"
+              >
+                <h3 className="text-lg font-semibold text-white">{item.question}</h3>
+                <p className="mt-3 text-sm leading-7 text-zinc-400">{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="pricing" className="border-t border-white/10">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="mx-auto max-w-3xl text-center">
@@ -259,8 +358,8 @@ export default function HomePage() {
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-zinc-400">
               Most people do not need more noise. They need a trusted place to
-              learn Bitcoin step by step, ask smart questions, and avoid common
-              mistakes.
+              learn crypto fundamentals, start with Bitcoin step by step, and
+              avoid common mistakes.
             </p>
           </div>
 

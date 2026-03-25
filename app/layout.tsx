@@ -18,16 +18,20 @@ export const metadata: Metadata = {
     template: "%s | Blockwise",
   },
   description:
-    "Blockwise helps beginners learn Bitcoin with structured lessons, quizzes, dashboard progress, and an AI tutor.",
+    "Blockwise helps beginners learn crypto with structured lessons, quizzes, dashboard progress, and an AI tutor, starting with a live Bitcoin track.",
   applicationName: "Blockwise",
   keywords: [
     "Blockwise",
+    "crypto course",
+    "learn crypto",
+    "crypto lessons",
+    "crypto quizzes",
+    "crypto education",
     "Bitcoin course",
     "learn Bitcoin",
     "Bitcoin lessons",
     "Bitcoin quizzes",
     "AI tutor",
-    "crypto education",
   ],
   alternates: {
     canonical: absoluteUrl("/"),
@@ -35,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Blockwise",
     description:
-      "Structured Bitcoin learning with lessons, quizzes, dashboard progress, and an AI tutor.",
+      "Structured crypto learning with lessons, quizzes, dashboard progress, and an AI tutor, starting with Bitcoin.",
     url: absoluteUrl("/"),
     siteName: "Blockwise",
     type: "website",
@@ -44,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Blockwise",
     description:
-      "Structured Bitcoin learning with lessons, quizzes, dashboard progress, and an AI tutor.",
+      "Structured crypto learning with lessons, quizzes, dashboard progress, and an AI tutor, starting with Bitcoin.",
   },
   robots: {
     index: true,

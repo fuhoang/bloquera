@@ -1,10 +1,10 @@
-import type { MetadataRoute } from "next";
+import robots from "@/app/robots";
 
-import { getSiteUrl } from "@/lib/seo";
+describe("robots", () => {
+  it("allows public marketing pages and blocks private areas", () => {
+    const result = robots();
 
-export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: {
+    expect(result.rules).toEqual({
       userAgent: "*",
       allow: [
         "/",
@@ -16,8 +16,7 @@ export default function robots(): MetadataRoute.Robots {
         "/how-crypto-transactions-work",
       ],
       disallow: ["/auth/", "/dashboard", "/learn", "/profiles", "/purchases", "/api/"],
-    },
-    sitemap: `${getSiteUrl()}/sitemap.xml`,
-    host: getSiteUrl(),
-  };
-}
+    });
+    expect(result.sitemap).toBe("http://localhost:3000/sitemap.xml");
+  });
+});

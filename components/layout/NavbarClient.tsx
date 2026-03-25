@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { getAccountStatus } from "@/lib/account-status";
 
 type NavLink = {
-  href: Route | "/#demo" | "/#pricing";
+  href: Route | "/#demo" | "/#guides" | "/#pricing";
   label: string;
 };
 
@@ -19,6 +19,7 @@ type NavbarClientProps = {
 };
 
 const NAV_LINKS = [
+  { href: "/learn-crypto", label: "Guides" },
   { href: "/learn", label: "Curriculum" },
   { href: "/#pricing", label: "Pricing" },
 ] satisfies NavLink[];

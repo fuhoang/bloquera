@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Log in",
-  description: "Log in to your Blockwise account to continue your Bitcoin learning progress.",
+  description: "Log in to your Blockwise account to continue your learning progress.",
   pathname: "/auth/login",
   noIndex: true,
 });
@@ -31,11 +31,11 @@ export default async function LoginPage({
         <div className="max-w-2xl pt-4">
           <p className="text-sm text-zinc-500">Authentication</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-            Continue your Bitcoin learning with a real account.
+            Continue your learning with a real account.
           </h1>
           <p className="mt-5 text-base leading-8 text-zinc-400 sm:text-lg">
-            Supabase Auth will handle sign in, session cookies, and future user-owned
-            progress persistence for BlockWise.
+            Sign in to keep your lesson progress, quizzes, tutor history, and
+            account settings in one place.
           </p>
         </div>
         <AuthForm

@@ -21,6 +21,7 @@ export function absoluteUrl(pathname = "/") {
 
 type PageMetadataOptions = {
   description: string;
+  imagePath?: string;
   noIndex?: boolean;
   pathname: string;
   title: string;
@@ -28,11 +29,13 @@ type PageMetadataOptions = {
 
 export function createPageMetadata({
   description,
+  imagePath = "/opengraph-image",
   noIndex = false,
   pathname,
   title,
 }: PageMetadataOptions): Metadata {
   const canonical = absoluteUrl(pathname);
+  const image = absoluteUrl(imagePath);
 
   return {
     title,
@@ -46,11 +49,20 @@ export function createPageMetadata({
       url: canonical,
       siteName: "Blockwise",
       type: "website",
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [image],
     },
     robots: noIndex
       ? {

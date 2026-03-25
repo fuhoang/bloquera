@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Blockwise",
     short_name: "Blockwise",
     description:
-      "Structured Bitcoin learning with lessons, quizzes, dashboard progress, and an AI tutor.",
+      "Structured crypto learning with lessons, quizzes, dashboard progress, and an AI tutor, starting with Bitcoin.",
     start_url: "/",
     display: "standalone",
     background_color: "#09090b",
