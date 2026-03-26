@@ -84,6 +84,8 @@ export function DashboardOverview({
   const recentQuizAttempts = [...quizAttempts]
     .sort((left, right) => Date.parse(right.attemptedAt) - Date.parse(left.attemptedAt))
     .slice(0, 4);
+  const premiumModuleCount = modules.filter((module) => module.requiresPro).length;
+  const tutorLimit = accountStatus.planLabel === "Pro" ? 30 : 10;
 
   return (
     <div className="space-y-8">
@@ -257,6 +259,14 @@ export function DashboardOverview({
                   {accountStatus.planSummary}
                 </p>
                 <div className="mt-4 space-y-2">
+                  <p className="rounded-2xl border border-black/8 bg-black/5 px-3 py-2 text-sm text-[var(--muted)]">
+                    {tutorLimit} tutor requests per minute
+                  </p>
+                  <p className="rounded-2xl border border-black/8 bg-black/5 px-3 py-2 text-sm text-[var(--muted)]">
+                    {accountStatus.planLabel === "Pro"
+                      ? `${premiumModuleCount} premium modules unlocked`
+                      : `${premiumModuleCount} premium modules available with Pro`}
+                  </p>
                   {accountStatus.upcomingFeatures.slice(0, 2).map((feature) => (
                     <p
                       key={feature}

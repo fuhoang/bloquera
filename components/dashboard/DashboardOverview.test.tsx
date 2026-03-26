@@ -93,6 +93,26 @@ const modules: ModuleMeta[] = [
       },
     ],
   },
+  {
+    slug: "advanced-basics",
+    title: "Advanced Basics",
+    description: "Level up understanding",
+    order: 3,
+    requiresPro: true,
+    track: "bitcoin",
+    lessons: [
+      {
+        slug: "nodes-explained",
+        title: "Nodes Explained",
+        summary: "Nodes basics",
+        duration: "8 min",
+        order: 36,
+        requiresPro: true,
+        track: "bitcoin",
+        section: "Advanced Basics",
+      },
+    ],
+  },
 ];
 
 const accountStatus: AccountStatus = {
@@ -147,6 +167,10 @@ describe("DashboardOverview", () => {
     expect(screen.getAllByText("Satoshi")).toHaveLength(2);
     expect(screen.getAllByText("Foundations")).toHaveLength(2);
     expect(screen.getByText("No active subscription")).toBeInTheDocument();
+    expect(screen.getByText("10 tutor requests per minute")).toBeInTheDocument();
+    expect(
+      screen.getByText("1 premium modules available with Pro"),
+    ).toBeInTheDocument();
     expect(screen.getByText("What Is Bitcoin?")).toBeInTheDocument();
     expect(screen.getByText("No tutor prompts yet")).toBeInTheDocument();
     expect(screen.getByText("0 days")).toBeInTheDocument();

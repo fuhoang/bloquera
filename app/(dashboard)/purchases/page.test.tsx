@@ -70,6 +70,12 @@ describe("purchases page route", () => {
     expect(screen.getByText("Billing actions")).toBeInTheDocument();
     expect(screen.getByText("Checkout actions")).toBeInTheDocument();
     expect(screen.getByText("Satoshi")).toBeInTheDocument();
+    expect(screen.getByText("10 tutor requests per minute")).toBeInTheDocument();
+    expect(
+      screen.getByText("2 premium modules available with Pro"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Advanced Basics")).toBeInTheDocument();
+    expect(screen.getByText("Mindset & Strategy")).toBeInTheDocument();
     expect(
       screen.getByText("Priority learning tracks and future premium modules"),
     ).toBeInTheDocument();
@@ -131,6 +137,8 @@ describe("purchases page route", () => {
 
     expect(screen.getByText("invoice.paid")).toBeInTheDocument();
     expect(screen.getByText("19.00 GBP")).toBeInTheDocument();
+    expect(screen.getByText("30 tutor requests per minute")).toBeInTheDocument();
+    expect(screen.getByText("2 premium modules unlocked")).toBeInTheDocument();
     expect(
       screen.getByText("Checkout and portal actions"),
     ).toBeInTheDocument();

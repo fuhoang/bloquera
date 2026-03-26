@@ -25,6 +25,7 @@ export function LearnOverview({
   const { completedCount, completedLessonSlugs, isLessonCompleted, loaded } =
     useLessonProgress();
   const plannedTracks = tracks.filter((track) => track.status === "planned");
+  const premiumModules = modules.filter((module) => module.requiresPro);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -58,6 +59,16 @@ export function LearnOverview({
               <p className="text-sm text-zinc-400">Level</p>
               <p className="mt-1 text-lg font-semibold text-white">Beginner</p>
             </div>
+            {premiumModules.length > 0 ? (
+              <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                <p className="text-sm text-zinc-400">Premium modules</p>
+                <p className="mt-1 text-lg font-semibold text-white">
+                  {hasProAccess
+                    ? `${premiumModules.length} unlocked`
+                    : `${premiumModules.length} locked`}
+                </p>
+              </div>
+            ) : null}
             {plannedTracks.length > 0 ? (
               <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
                 <p className="text-sm text-zinc-400">Next track</p>
