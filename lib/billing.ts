@@ -217,6 +217,10 @@ export function getCancelUrl(path = "/purchases?checkout=canceled") {
   return absoluteUrl(path);
 }
 
+export function getPortalReturnUrl(path = "/purchases") {
+  return absoluteUrl(path);
+}
+
 export async function ensureStripeCustomerForCurrentUser() {
   const supabase = await createServerSupabaseClient();
   const admin = createSupabaseAdminClient();
@@ -264,6 +268,22 @@ export async function ensureStripeCustomerForCurrentUser() {
     customerId: customer.id,
     user,
   };
+}
+
+export async function createBillingPortalSessionForCurrentUser() {
+  const stripe = (await import("@/lib/stripe")).getStripe();
+  const customer = await ensureStripeCustomerForCurrentUser();
+
+  if (!stripe || !customer) {
+    return null;
+  }
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customer.customerId,
+    return_url: getPortalReturnUrl(),
+  });
+
+  return session.url;
 }
 
 export function getPlanDetails(plan: BillingPlanSlug) {

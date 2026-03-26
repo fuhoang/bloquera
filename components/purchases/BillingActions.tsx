@@ -4,20 +4,24 @@ import { useState } from "react";
 
 type PlanKey = "pro_monthly" | "pro_yearly";
 
-type CheckoutButtonsProps = {
+type BillingActionsProps = {
   canCheckout: boolean;
+  canOpenPortal: boolean;
   checkoutLabel: string;
 };
 
-export function CheckoutButtons({
+export function BillingActions({
   canCheckout,
+  canOpenPortal,
   checkoutLabel,
-}: CheckoutButtonsProps) {
-  const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
+}: BillingActionsProps) {
+  const [loadingAction, setLoadingAction] = useState<
+    PlanKey | "portal" | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
 
   async function startCheckout(plan: PlanKey) {
-    setLoadingPlan(plan);
+    setLoadingAction(plan);
     setError(null);
 
     try {
@@ -41,7 +45,32 @@ export function CheckoutButtons({
     } catch {
       setError("Unable to start checkout right now.");
     } finally {
-      setLoadingPlan(null);
+      setLoadingAction(null);
+    }
+  }
+
+  async function openPortal() {
+    setLoadingAction("portal");
+    setError(null);
+
+    try {
+      const response = await fetch("/api/stripe/portal", {
+        method: "POST",
+      });
+      const payload = (await response.json()) as
+        | { portalUrl?: string; error?: string }
+        | undefined;
+
+      if (!response.ok || !payload?.portalUrl) {
+        setError(payload?.error ?? "Unable to open billing portal right now.");
+        return;
+      }
+
+      window.location.assign(payload.portalUrl);
+    } catch {
+      setError("Unable to open billing portal right now.");
+    } finally {
+      setLoadingAction(null);
     }
   }
 
@@ -50,25 +79,35 @@ export function CheckoutButtons({
       <div className="grid gap-3 md:grid-cols-2">
         <button
           className="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-60"
-          disabled={!canCheckout || loadingPlan !== null}
+          disabled={!canCheckout || loadingAction !== null}
           onClick={() => startCheckout("pro_monthly")}
           type="button"
         >
-          {loadingPlan === "pro_monthly"
+          {loadingAction === "pro_monthly"
             ? "Opening checkout..."
             : `${checkoutLabel} monthly`}
         </button>
         <button
           className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
-          disabled={!canCheckout || loadingPlan !== null}
+          disabled={!canCheckout || loadingAction !== null}
           onClick={() => startCheckout("pro_yearly")}
           type="button"
         >
-          {loadingPlan === "pro_yearly"
+          {loadingAction === "pro_yearly"
             ? "Opening checkout..."
             : `${checkoutLabel} yearly`}
         </button>
       </div>
+      {canOpenPortal ? (
+        <button
+          className="w-full rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-5 py-3 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={loadingAction !== null}
+          onClick={openPortal}
+          type="button"
+        >
+          {loadingAction === "portal" ? "Opening billing portal..." : "Manage billing"}
+        </button>
+      ) : null}
       {error ? <p className="text-sm text-red-300">{error}</p> : null}
       {!canCheckout ? (
         <p className="text-sm text-zinc-500">

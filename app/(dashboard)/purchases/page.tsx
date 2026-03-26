@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { CheckoutButtons } from "@/components/purchases/CheckoutButtons";
+import { BillingActions } from "@/components/purchases/BillingActions";
 import { getBillingContextForCurrentUser } from "@/lib/account-status";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -77,8 +77,9 @@ export default async function PurchasesPage() {
                 <p>{accountStatus.nextStep}</p>
               </div>
               <div className="mt-5">
-                <CheckoutButtons
+                <BillingActions
                   canCheckout={Boolean(priceMap)}
+                  canOpenPortal={Boolean(billingSnapshot.customerId)}
                   checkoutLabel={accountStatus.checkoutCtaLabel}
                 />
               </div>

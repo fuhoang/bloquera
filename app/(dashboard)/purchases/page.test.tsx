@@ -8,8 +8,14 @@ vi.mock("@/lib/account-status", () => ({
   getBillingContextForCurrentUser: () => getBillingContextForCurrentUser(),
 }));
 
-vi.mock("@/components/purchases/CheckoutButtons", () => ({
-  CheckoutButtons: () => <div>Checkout actions</div>,
+vi.mock("@/components/purchases/BillingActions", () => ({
+  BillingActions: ({
+    canOpenPortal,
+  }: {
+    canOpenPortal: boolean;
+  }) => (
+    <div>{canOpenPortal ? "Checkout and portal actions" : "Checkout actions"}</div>
+  ),
 }));
 
 describe("purchases page route", () => {
@@ -125,5 +131,8 @@ describe("purchases page route", () => {
 
     expect(screen.getByText("invoice.paid")).toBeInTheDocument();
     expect(screen.getByText("19.00 GBP")).toBeInTheDocument();
+    expect(
+      screen.getByText("Checkout and portal actions"),
+    ).toBeInTheDocument();
   });
 });
