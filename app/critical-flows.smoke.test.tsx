@@ -235,7 +235,12 @@ describe("critical flows smoke", () => {
     render(page);
 
     expect(screen.getByText("Pro monthly")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Billings" }));
     expect(screen.getByText("Checkout and portal actions")).toBeInTheDocument();
-    expect(screen.getByText("invoice.paid")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "History purchases" }));
+    expect(screen.getByText("Invoice Paid")).toBeInTheDocument();
+    expect(screen.getByText("14.99 GBP")).toBeInTheDocument();
   });
 });

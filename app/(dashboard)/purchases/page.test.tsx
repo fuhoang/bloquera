@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import PurchasesPage from "@/app/(dashboard)/purchases/page";
 
@@ -16,6 +16,10 @@ vi.mock("@/components/purchases/BillingActions", () => ({
   }) => (
     <div>{canOpenPortal ? "Checkout and portal actions" : "Checkout actions"}</div>
   ),
+}));
+
+vi.mock("@/components/purchases/UpgradeFunnel", () => ({
+  UpgradeFunnel: () => <div>Upgrade funnel</div>,
 }));
 
 describe("purchases page route", () => {
@@ -63,19 +67,26 @@ describe("purchases page route", () => {
     expect(
       screen.getByText("Subscription and purchase history"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Free plan")).toBeInTheDocument();
     expect(
-      screen.getByText("No purchases are linked to this account yet."),
+      screen.getByRole("heading", { level: 2, name: "Free plan" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Billing actions")).toBeInTheDocument();
-    expect(screen.getByText("Checkout actions")).toBeInTheDocument();
     expect(screen.getByText("Satoshi")).toBeInTheDocument();
     expect(screen.getByText("10 tutor requests per minute")).toBeInTheDocument();
     expect(
       screen.getByText("2 premium modules available with Pro"),
     ).toBeInTheDocument();
+    expect(screen.getByText("Current access")).toBeInTheDocument();
+    expect(screen.getByText("Monthly or yearly Pro")).toBeInTheDocument();
     expect(screen.getByText("Advanced Basics")).toBeInTheDocument();
     expect(screen.getByText("Mindset & Strategy")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Billings" }));
+
+    expect(
+      screen.getByText("No purchases are linked to this account yet."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Billing actions")).toBeInTheDocument();
+    expect(screen.getByText("Checkout actions")).toBeInTheDocument();
     expect(
       screen.getByText("Priority learning tracks and future premium modules"),
     ).toBeInTheDocument();
@@ -114,7 +125,19 @@ describe("purchases page route", () => {
             created_at: "2026-03-25T00:00:00.000Z",
           },
         ],
-        subscription: null,
+        subscription: {
+          user_id: "user-1",
+          stripe_customer_id: "cus_123",
+          stripe_subscription_id: "sub_123",
+          stripe_price_id: "price_monthly",
+          plan_slug: "pro_monthly",
+          status: "active",
+          current_period_start: "2026-03-01T00:00:00.000Z",
+          current_period_end: "2026-04-01T00:00:00.000Z",
+          cancel_at_period_end: false,
+          created_at: "2026-03-01T00:00:00.000Z",
+          updated_at: "2026-03-01T00:00:00.000Z",
+        },
       },
       priceMap: {
         pro_monthly: "price_monthly",
@@ -135,12 +158,90 @@ describe("purchases page route", () => {
 
     render(page);
 
-    expect(screen.getByText("invoice.paid")).toBeInTheDocument();
-    expect(screen.getByText("19.00 GBP")).toBeInTheDocument();
     expect(screen.getByText("30 tutor requests per minute")).toBeInTheDocument();
     expect(screen.getByText("2 premium modules unlocked")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Billings" }));
+
+    expect(screen.getByText("Next renewal")).toBeInTheDocument();
+    expect(screen.getByText("01 Apr 2026")).toBeInTheDocument();
+    expect(screen.getByText("Monthly billing")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Latest paid invoice: 19\.00 GBP paid 25 Mar 2026\./),
+    ).toBeInTheDocument();
     expect(
       screen.getByText("Checkout and portal actions"),
     ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "History purchases" }));
+
+    expect(screen.getByText("Invoice Paid")).toBeInTheDocument();
+    expect(screen.getByText("19.00 GBP")).toBeInTheDocument();
+    expect(screen.getByText("Upgrade funnel")).toBeInTheDocument();
+  });
+
+  it("renders cancellation timing when the subscription will end at period end", async () => {
+    getBillingContextForCurrentUser.mockResolvedValue({
+      accountStatus: {
+        billingSummary: "Pro yearly is active and will end 01 Apr 2026.",
+        billingStatus: "Cancels at period end",
+        canManageBilling: true,
+        checkoutCtaLabel: "Resume with a new plan",
+        ctaHref: "/purchases",
+        ctaLabel: "Open billing hub",
+        headline: "Pro yearly",
+        includedFeatures: ["Everything in the free plan"],
+        nextStep: "Reactivate with a new checkout session before the current billing period ends if you want uninterrupted access.",
+        planLabel: "Pro",
+        planSummary: "Pro summary",
+        upcomingFeatures: ["Subscription remains active until the current billing period ends."],
+      },
+      billingSnapshot: {
+        configured: true,
+        customerId: "cus_123",
+        purchaseEvents: [],
+        subscription: {
+          user_id: "user-1",
+          stripe_customer_id: "cus_123",
+          stripe_subscription_id: "sub_123",
+          stripe_price_id: "price_yearly",
+          plan_slug: "pro_yearly",
+          status: "active",
+          current_period_start: "2025-04-01T00:00:00.000Z",
+          current_period_end: "2026-04-01T00:00:00.000Z",
+          cancel_at_period_end: true,
+          created_at: "2025-04-01T00:00:00.000Z",
+          updated_at: "2026-03-01T00:00:00.000Z",
+        },
+      },
+      priceMap: {
+        pro_monthly: "price_monthly",
+        pro_yearly: "price_yearly",
+      },
+      profile: {
+        id: "user-1",
+        email: "satoshi@example.com",
+        display_name: "Satoshi",
+        avatar_url: null,
+        bio: null,
+        timezone: null,
+        created_at: "2026-03-01T00:00:00.000Z",
+      },
+    });
+
+    const page = await PurchasesPage();
+
+    render(page);
+
+    fireEvent.click(screen.getByRole("tab", { name: "Billings" }));
+
+    expect(screen.getByText("Access ends")).toBeInTheDocument();
+    expect(screen.getByText("01 Apr 2026")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Cancellation is scheduled. Pro access remains active until 01 Apr 2026.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Yearly billing")).toBeInTheDocument();
   });
 });
