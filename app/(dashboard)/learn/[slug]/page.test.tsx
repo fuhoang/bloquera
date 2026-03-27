@@ -55,6 +55,12 @@ vi.mock("@/components/lesson/LessonQuizGate", () => ({
   ),
 }));
 
+vi.mock("@/components/lesson/LessonTutorPanel", () => ({
+  LessonTutorPanel: ({ lessonTitle }: { lessonTitle: string }) => (
+    <div data-testid="lesson-tutor-panel">{lessonTitle}</div>
+  ),
+}));
+
 vi.mock("@/components/lesson/ProgressBar", () => ({
   ProgressBar: ({ value }: { value: number }) => (
     <div data-testid="progress-bar">{value}</div>
@@ -85,8 +91,11 @@ describe("learn lesson page route", () => {
       "data-module-index",
       "0",
     );
-    expect(screen.getAllByText("What Is Money?")).toHaveLength(2);
+    expect(screen.getAllByText("What Is Money?")).toHaveLength(3);
     expect(screen.getByText("Foundations")).toBeInTheDocument();
+    expect(screen.getByTestId("lesson-tutor-panel")).toHaveTextContent(
+      "What Is Money?",
+    );
     expect(screen.getByTestId("lesson-quiz-gate")).toHaveAttribute(
       "data-question-count",
       "2",

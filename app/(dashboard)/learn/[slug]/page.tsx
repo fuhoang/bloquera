@@ -6,6 +6,7 @@ import { hasProAccessForCurrentUser } from "@/lib/account-status";
 import { LessonContent } from "@/components/lesson/LessonContent";
 import { LessonHeader } from "@/components/lesson/LessonHeader";
 import { LessonQuizGate } from "@/components/lesson/LessonQuizGate";
+import { LessonTutorPanel } from "@/components/lesson/LessonTutorPanel";
 import { ProgressBar } from "@/components/lesson/ProgressBar";
 import { lessonConfig, moduleConfig } from "@/content/config";
 import { buildLessonQuiz } from "@/lib/lesson-quiz";
@@ -109,6 +110,7 @@ export default async function LearnLessonPage({
               ))}
             </div>
           </div>
+          <LessonTutorPanel lessonTitle={lesson.title} />
         </aside>
       </div>
       <LessonQuizGate
