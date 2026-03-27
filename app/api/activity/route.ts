@@ -92,10 +92,7 @@ async function readSupabaseHistory() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return {
-      history: EMPTY_LEARNING_HISTORY,
-      persisted: false,
-    };
+    return null;
   }
 
   const { data, error } = await supabase
@@ -300,13 +297,7 @@ async function writeSupabaseHistory(body: ActivityInsertBody) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return {
-      persisted: false,
-      response: NextResponse.json(
-        { error: "You must be logged in to save activity." },
-        { status: 401 },
-      ),
-    };
+    return null;
   }
 
   const nextActivity = sanitizeActivityInsert(body);

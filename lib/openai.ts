@@ -1,5 +1,3 @@
-import { tutorSystemPrompt } from "@/lib/prompts";
-
 export function inferTutorTopic(message: string) {
   const lowered = message.toLowerCase();
 
@@ -63,5 +61,5 @@ export async function createTutorReply(message: string) {
       "A strong next step is to distinguish what nodes do from what miners do, because that clears up many security questions.",
   };
 
-  return `${primerByTopic[topic]}\n\nYou asked: "${cleaned}"\n\n${nextStepByTopic[topic]}\n\nSystem frame: ${tutorSystemPrompt.trim()}`;
+  return `${primerByTopic[topic]}\n\nYou asked: "${cleaned}"\n\n${nextStepByTopic[topic]}`;
 }
