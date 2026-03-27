@@ -75,9 +75,9 @@ export function PurchasesFolderTabs({
             <button
               key={tab.id}
               aria-selected={isActive}
-              className={`rounded-t-[1.75rem] border px-5 py-3 text-sm font-semibold transition ${
+              className={`rounded-t-[1rem] border px-5 py-3 text-sm font-semibold transition ${
                 isActive
-                  ? "border-white/15 border-b-zinc-950 bg-zinc-950 text-white"
+                  ? "border-orange-500/30 border-b-zinc-950 bg-orange-500/12 text-orange-200"
                   : "border-transparent bg-white/[0.04] text-zinc-400 hover:bg-white/[0.07] hover:text-white"
               }`}
               onClick={() => setActiveTab(tab.id)}
