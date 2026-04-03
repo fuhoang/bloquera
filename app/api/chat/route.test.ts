@@ -102,6 +102,23 @@ describe("chat route", () => {
     });
   });
 
+  it("rejects malformed request bodies", async () => {
+    const response = await POST(
+      new Request("http://localhost/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: "{",
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: "Please enter a valid tutor question.",
+    });
+  });
+
   it("requires an authenticated user", async () => {
     getUser.mockResolvedValue({
       data: { user: null },
@@ -186,6 +203,25 @@ describe("chat route", () => {
     expect(response.status).toBe(429);
     await expect(response.json()).resolves.toEqual({
       error: "You have used the guest AI demo for now. Log in to keep chatting.",
+    });
+  });
+
+  it("returns a service-unavailable response when auth verification fails", async () => {
+    getUser.mockRejectedValue(new Error("auth unavailable"));
+
+    const response = await POST(
+      new Request("http://localhost/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: "What is Bitcoin?" }),
+      }),
+    );
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({
+      error: "Unable to verify your account right now.",
     });
   });
 
@@ -298,7 +334,7 @@ describe("chat route", () => {
     });
   });
 
-  it("returns a server error when the tutor fails", async () => {
+  it("returns a service-unavailable response when the tutor fails", async () => {
     createTutorReply.mockRejectedValue(new Error("boom"));
 
     const response = await POST(
@@ -311,9 +347,9 @@ describe("chat route", () => {
       }),
     );
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(503);
     await expect(response.json()).resolves.toEqual({
-      error: "Unable to process your request right now.",
+      error: "The tutor is temporarily unavailable. Please try again shortly.",
     });
   });
 

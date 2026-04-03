@@ -239,4 +239,40 @@ describe("stripe webhook route", () => {
     });
     expect(response.status).toBe(200);
   });
+
+  it("returns a service-unavailable response when event processing fails", async () => {
+    constructEvent.mockReturnValue({
+      data: {
+        object: {
+          amount_total: 2_900,
+          currency: "usd",
+          customer: "cus_123",
+          id: "cs_123",
+          metadata: {
+            plan_slug: "pro_yearly",
+          },
+          payment_status: "paid",
+          subscription: "sub_123",
+        },
+      },
+      type: "checkout.session.completed",
+    });
+    recordPurchaseEvent.mockRejectedValue(new Error("db unavailable"));
+
+    const { POST } = await import("@/app/api/stripe/webhook/route");
+    const response = await POST(
+      new Request("http://localhost/api/stripe/webhook", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "sig_123",
+        },
+        body: "{}",
+      }),
+    );
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({
+      error: "Unable to process Stripe webhook right now.",
+    });
+  });
 });

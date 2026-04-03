@@ -7,6 +7,7 @@ import {
   recordPurchaseEvent,
   upsertSubscriptionFromStripe,
 } from "@/lib/billing";
+import { jsonError } from "@/lib/api-route";
 import { getStripe } from "@/lib/stripe";
 import { getStripeServerEnv } from "@/lib/supabase/config";
 
@@ -21,19 +22,13 @@ export async function POST(request: Request) {
   const env = getStripeServerEnv();
 
   if (!stripe || !env?.webhookSecret) {
-    return NextResponse.json(
-      { error: "Stripe webhook is not configured." },
-      { status: 500 },
-    );
+    return jsonError("Stripe webhook is not configured.", 500);
   }
 
   const signature = request.headers.get("stripe-signature");
 
   if (!signature) {
-    return NextResponse.json(
-      { error: "Missing Stripe signature." },
-      { status: 400 },
-    );
+    return jsonError("Missing Stripe signature.", 400);
   }
 
   const payload = await request.text();
@@ -46,73 +41,74 @@ export async function POST(request: Request) {
       env.webhookSecret,
     );
   } catch {
-    return NextResponse.json(
-      { error: "Invalid Stripe signature." },
-      { status: 400 },
-    );
+    return jsonError("Invalid Stripe signature.", 400);
   }
 
-  switch (event.type) {
-    case "checkout.session.completed": {
-      const session = event.data.object as Stripe.Checkout.Session;
-      await recordPurchaseEvent({
-        amountCents: session.amount_total,
-        currency: session.currency,
-        eventType: event.type,
-        status: session.payment_status,
-        stripeCheckoutSessionId: session.id,
-        stripeCustomerId:
-          typeof session.customer === "string" ? session.customer : null,
-        subscriptionId:
-          typeof session.subscription === "string" ? session.subscription : null,
-      });
-      await recordConversionEvent({
-        eventType: "checkout_complete",
-        plan:
-          session.metadata?.plan_slug === "pro_monthly" ||
-          session.metadata?.plan_slug === "pro_yearly"
-            ? session.metadata.plan_slug
-            : null,
-        source: "stripe_webhook",
-        stripeCustomerId:
-          typeof session.customer === "string" ? session.customer : null,
-        targetSlug: "/purchases",
-        targetTitle:
-          session.metadata?.plan_slug === "pro_yearly"
-            ? "Completed Pro yearly checkout"
-            : "Completed Pro monthly checkout",
-      });
-      break;
+  try {
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        await recordPurchaseEvent({
+          amountCents: session.amount_total,
+          currency: session.currency,
+          eventType: event.type,
+          status: session.payment_status,
+          stripeCheckoutSessionId: session.id,
+          stripeCustomerId:
+            typeof session.customer === "string" ? session.customer : null,
+          subscriptionId:
+            typeof session.subscription === "string" ? session.subscription : null,
+        });
+        await recordConversionEvent({
+          eventType: "checkout_complete",
+          plan:
+            session.metadata?.plan_slug === "pro_monthly" ||
+            session.metadata?.plan_slug === "pro_yearly"
+              ? session.metadata.plan_slug
+              : null,
+          source: "stripe_webhook",
+          stripeCustomerId:
+            typeof session.customer === "string" ? session.customer : null,
+          targetSlug: "/purchases",
+          targetTitle:
+            session.metadata?.plan_slug === "pro_yearly"
+              ? "Completed Pro yearly checkout"
+              : "Completed Pro monthly checkout",
+        });
+        break;
+      }
+      case "customer.subscription.created":
+      case "customer.subscription.updated": {
+        await upsertSubscriptionFromStripe(
+          event.data.object as Stripe.Subscription,
+        );
+        break;
+      }
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object as Stripe.Subscription;
+        await markSubscriptionCanceled(subscription.id);
+        break;
+      }
+      case "invoice.paid":
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        await recordPurchaseEvent({
+          amountCents: invoice.amount_paid ?? invoice.amount_due,
+          currency: invoice.currency,
+          eventType: event.type,
+          status: invoice.status,
+          stripeCustomerId:
+            typeof invoice.customer === "string" ? invoice.customer : null,
+          stripeInvoiceId: invoice.id,
+          subscriptionId: getInvoiceSubscriptionId(invoice),
+        });
+        break;
+      }
+      default:
+        break;
     }
-    case "customer.subscription.created":
-    case "customer.subscription.updated": {
-      await upsertSubscriptionFromStripe(
-        event.data.object as Stripe.Subscription,
-      );
-      break;
-    }
-    case "customer.subscription.deleted": {
-      const subscription = event.data.object as Stripe.Subscription;
-      await markSubscriptionCanceled(subscription.id);
-      break;
-    }
-    case "invoice.paid":
-    case "invoice.payment_failed": {
-      const invoice = event.data.object as Stripe.Invoice;
-      await recordPurchaseEvent({
-        amountCents: invoice.amount_paid ?? invoice.amount_due,
-        currency: invoice.currency,
-        eventType: event.type,
-        status: invoice.status,
-        stripeCustomerId:
-          typeof invoice.customer === "string" ? invoice.customer : null,
-        stripeInvoiceId: invoice.id,
-        subscriptionId: getInvoiceSubscriptionId(invoice),
-      });
-      break;
-    }
-    default:
-      break;
+  } catch {
+    return jsonError("Unable to process Stripe webhook right now.", 503);
   }
 
   return NextResponse.json({ received: true });
