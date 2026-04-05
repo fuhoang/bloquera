@@ -1,10 +1,14 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import {
+  getServerSupabaseOrError,
+  jsonError,
+  parseJsonBody,
+} from "@/lib/api-route";
 import { getTutorRequestLimit, hasProAccess } from "@/lib/billing";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createTutorReply, inferTutorTopic } from "@/lib/openai";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const MAX_MESSAGE_LENGTH = 500;
 const CHAT_RATE_WINDOW_MS = 60_000;
@@ -13,6 +17,8 @@ const GUEST_TUTOR_REQUEST_LIMIT = 3;
 const GUEST_TUTOR_COOKIE = "blockwise_guest_tutor_id";
 const GUEST_LIMIT_ERROR =
   "You have used the guest AI demo for now. Log in to keep chatting.";
+const TUTOR_UNAVAILABLE_ERROR =
+  "The tutor is temporarily unavailable. Please try again shortly.";
 
 function buildTutorUsage(
   limit: number,
@@ -44,47 +50,47 @@ function buildRateLimitResponse(resetAt: number, error: string) {
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabaseResult = await getServerSupabaseOrError({
+      unavailableMessage: "Unable to reach tutor services right now.",
+    });
 
-    if (!supabase) {
-      return NextResponse.json(
-        { error: "Supabase is not configured." },
-        { status: 500 },
-      );
+    if ("response" in supabaseResult) {
+      return supabaseResult.response;
     }
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const body = (await request.json()) as {
+    const bodyResult = await parseJsonBody<{
       message?: unknown;
       source?: unknown;
-    };
+    }>(request, "Please enter a valid tutor question.");
+
+    if ("response" in bodyResult) {
+      return bodyResult.response;
+    }
+
+    let user = null;
+
+    try {
+      const authResult = await supabaseResult.supabase.auth.getUser();
+      user = authResult.data.user;
+    } catch {
+      return jsonError("Unable to verify your account right now.", 503);
+    }
+
     const message =
-      typeof body.message === "string" ? body.message.trim() : "";
-    const source = body.source === "home" ? "home" : "lesson";
+      typeof bodyResult.data.message === "string" ? bodyResult.data.message.trim() : "";
+    const source = bodyResult.data.source === "home" ? "home" : "lesson";
 
     if (!message) {
-      return NextResponse.json(
-        { error: "Please enter a question before submitting." },
-        { status: 400 },
-      );
+      return jsonError("Please enter a question before submitting.", 400);
     }
 
     if (message.length > MAX_MESSAGE_LENGTH) {
-      return NextResponse.json(
-        { error: "Please keep tutor questions under 500 characters." },
-        { status: 400 },
-      );
+      return jsonError("Please keep tutor questions under 500 characters.", 400);
     }
 
     if (!user) {
       if (source !== "home") {
-        return NextResponse.json(
-          { error: "Log in to use the AI tutor." },
-          { status: 401 },
-        );
+        return jsonError("Log in to use the AI tutor.", 401);
       }
 
       const cookieStore = await cookies();
@@ -114,7 +120,14 @@ export async function POST(request: Request) {
         return response;
       }
 
-      const reply = await createTutorReply(message);
+      let reply;
+
+      try {
+        reply = await createTutorReply(message);
+      } catch {
+        return jsonError(TUTOR_UNAVAILABLE_ERROR, 503);
+      }
+
       const topic = inferTutorTopic(message);
       const response = NextResponse.json({
         reply,
@@ -138,19 +151,27 @@ export async function POST(request: Request) {
       return response;
     }
 
-    const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select(
-        "user_id, stripe_customer_id, stripe_subscription_id, stripe_price_id, plan_slug, status, current_period_start, current_period_end, cancel_at_period_end, created_at, updated_at",
-      )
-      .eq("user_id", user.id)
-      .maybeSingle();
+    let subscription = null;
+
+    try {
+      const subscriptionResult = await supabaseResult.supabase
+        .from("subscriptions")
+        .select(
+          "user_id, stripe_customer_id, stripe_subscription_id, stripe_price_id, plan_slug, status, current_period_start, current_period_end, cancel_at_period_end, created_at, updated_at",
+        )
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      subscription = subscriptionResult.data ?? null;
+    } catch {
+      return jsonError("Unable to load tutor access right now.", 503);
+    }
 
     const tutorRequestLimit = getTutorRequestLimit({
       configured: true,
       customerId: null,
       purchaseEvents: [],
-      subscription: subscription ?? null,
+      subscription,
     });
 
     const limitResult = checkRateLimit(
@@ -166,12 +187,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const reply = await createTutorReply(message);
+    let reply;
+
+    try {
+      reply = await createTutorReply(message);
+    } catch {
+      return jsonError(TUTOR_UNAVAILABLE_ERROR, 503);
+    }
+
     const topic = inferTutorTopic(message);
     const responsePreview = reply.slice(0, TUTOR_PROMPT_PREVIEW_MAX);
     const recordedAt = new Date().toISOString();
 
-    void supabase.from("learning_activity").insert({
+    void supabaseResult.supabase.from("learning_activity").insert({
       activity_context: topic,
       activity_type: "tutor_prompt",
       created_at: recordedAt,
@@ -191,16 +219,13 @@ export async function POST(request: Request) {
           configured: true,
           customerId: null,
           purchaseEvents: [],
-          subscription: subscription ?? null,
+          subscription,
         })
           ? "pro"
           : "free",
       },
     });
   } catch {
-    return NextResponse.json(
-      { error: "Unable to process your request right now." },
-      { status: 500 },
-    );
+    return jsonError("Unable to process your request right now.", 500);
   }
 }
