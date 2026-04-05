@@ -14,6 +14,7 @@ type TutorUsage = {
 };
 
 type UseChatOptions = {
+  initialUsage?: TutorUsage | null;
   source?: "home" | "lesson";
 };
 
@@ -31,7 +32,7 @@ export function useChat(
   const [messages, setMessages] = useState<ChatMessage[]>([...initialMessages]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [usage, setUsage] = useState<TutorUsage | null>(null);
+  const [usage, setUsage] = useState<TutorUsage | null>(options.initialUsage ?? null);
   const { recordTutorPrompt } = useLearningHistory();
 
   const sendMessage = useCallback(async (content: string) => {

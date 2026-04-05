@@ -66,6 +66,12 @@ export const homePromptHighlights = [
   "Built for beginners",
 ] as const;
 
+export const homeChatStarters = [
+  "What is Bitcoin in plain English?",
+  "How do wallets actually work?",
+  "Why do transaction fees exist?",
+] as const;
+
 export const homePublicGuides = publicGuides;
 
 export const homeFaq = [
