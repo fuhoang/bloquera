@@ -3,6 +3,7 @@ import { POST } from "@/app/api/chat/route";
 const createTutorReply = vi.fn();
 const getUser = vi.fn();
 const createServerSupabaseClient = vi.fn();
+const createSupabaseAdminClient = vi.fn();
 const getBillingSnapshotForCurrentUser = vi.fn();
 const insert = vi.fn();
 const from = vi.fn();
@@ -36,6 +37,10 @@ vi.mock("@/lib/supabase/server", () => ({
   createServerSupabaseClient: () => createServerSupabaseClient(),
 }));
 
+vi.mock("@/lib/supabase/admin", () => ({
+  createSupabaseAdminClient: () => createSupabaseAdminClient(),
+}));
+
 vi.mock("next/headers", () => ({
   cookies: () => cookies(),
 }));
@@ -45,6 +50,7 @@ describe("chat route", () => {
     createTutorReply.mockReset();
     getUser.mockReset();
     createServerSupabaseClient.mockReset();
+    createSupabaseAdminClient.mockReset();
     getBillingSnapshotForCurrentUser.mockReset();
     insert.mockReset();
     from.mockReset();
@@ -59,6 +65,9 @@ describe("chat route", () => {
       auth: {
         getUser,
       },
+      from,
+    });
+    createSupabaseAdminClient.mockReturnValue({
       from,
     });
     getUser.mockResolvedValue({

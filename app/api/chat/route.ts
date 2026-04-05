@@ -6,6 +6,7 @@ import {
   jsonError,
   parseJsonBody,
 } from "@/lib/api-route";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   getBillingSnapshotForCurrentUser,
   getTutorRequestLimit,
@@ -286,12 +287,13 @@ export async function POST(request: Request) {
 
     const tutorRequestLimit = getTutorRequestLimit(billingSnapshot);
 
+    const activityClient = createSupabaseAdminClient() ?? supabaseResult.supabase;
     let limitResult;
 
     try {
       limitResult = await getSignedInTutorUsageToday({
         limit: tutorRequestLimit,
-        supabase: supabaseResult.supabase,
+        supabase: activityClient,
         userId: user.id,
       });
     } catch {
@@ -318,7 +320,7 @@ export async function POST(request: Request) {
     const recordedAt = new Date().toISOString();
 
     try {
-      await supabaseResult.supabase.from("learning_activity").insert({
+      const insertResult = await activityClient.from("learning_activity").insert({
         activity_context: topic,
         activity_type: "tutor_prompt",
         created_at: recordedAt,
@@ -327,6 +329,10 @@ export async function POST(request: Request) {
         response_preview: responsePreview,
         user_id: user.id,
       });
+
+      if (insertResult?.error) {
+        return jsonError("Unable to save tutor activity right now.", 503);
+      }
     } catch {
       return jsonError("Unable to save tutor activity right now.", 503);
     }
