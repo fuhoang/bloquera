@@ -7,11 +7,9 @@ import {
   parseJsonBody,
 } from "@/lib/api-route";
 import { getTutorRequestLimit, hasProAccess } from "@/lib/billing";
-import { checkRateLimit } from "@/lib/rate-limit";
 import { createTutorReply, inferTutorTopic } from "@/lib/openai";
 
 const MAX_MESSAGE_LENGTH = 500;
-const CHAT_RATE_WINDOW_MS = 60_000;
 const TUTOR_PROMPT_PREVIEW_MAX = 160;
 const GUEST_TUTOR_REQUEST_LIMIT = 3;
 const GUEST_TUTOR_COOKIE = "blockwise_guest_tutor_id";
@@ -31,6 +29,12 @@ function buildTutorUsage(
     remaining: limitResult.remaining,
     resetAt: limitResult.resetAt,
   };
+}
+
+function getNextDayResetAt(now = new Date()) {
+  const resetAt = new Date(now);
+  resetAt.setUTCHours(24, 0, 0, 0);
+  return resetAt.getTime();
 }
 
 function buildRateLimitResponse(resetAt: number, error: string) {
@@ -56,6 +60,53 @@ function buildGuestCookieOptions(maxAgeSeconds: number) {
     maxAge: maxAgeSeconds,
     path: "/",
     sameSite: "lax" as const,
+  };
+}
+
+async function getSignedInTutorUsageToday({
+  supabase,
+  userId,
+  limit,
+}: {
+  supabase: {
+    from: (table: string) => {
+      select: (...args: unknown[]) => {
+        eq: (column: string, value: unknown) => {
+          eq: (column: string, value: unknown) => {
+            gte: (column: string, value: string) => {
+              lt: (
+                column: string,
+                value: string,
+              ) => Promise<{ count: number | null }>;
+            };
+          };
+        };
+      };
+    };
+  };
+  userId: string;
+  limit: number;
+}) {
+  const now = new Date();
+  const dayStart = new Date(now);
+  dayStart.setUTCHours(0, 0, 0, 0);
+  const nextResetAt = getNextDayResetAt(now);
+
+  const result = await supabase
+    .from("learning_activity")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("activity_type", "tutor_prompt")
+    .gte("created_at", dayStart.toISOString())
+    .lt("created_at", new Date(nextResetAt).toISOString());
+
+  const used = result.count ?? 0;
+
+  return {
+    allowed: used < limit,
+    remaining: Math.max(0, limit - used),
+    resetAt: nextResetAt,
+    used,
   };
 }
 
@@ -234,16 +285,22 @@ export async function POST(request: Request) {
       subscription,
     });
 
-    const limitResult = checkRateLimit(
-      `chat:${user.id}`,
-      tutorRequestLimit,
-      CHAT_RATE_WINDOW_MS,
-    );
+    let limitResult;
+
+    try {
+      limitResult = await getSignedInTutorUsageToday({
+        limit: tutorRequestLimit,
+        supabase: supabaseResult.supabase,
+        userId: user.id,
+      });
+    } catch {
+      return jsonError("Unable to load tutor usage right now.", 503);
+    }
 
     if (!limitResult.allowed) {
       return buildRateLimitResponse(
         limitResult.resetAt,
-        "You have reached the tutor limit for now. Please try again in a minute.",
+        "You have reached your tutor limit for today. Please come back tomorrow.",
       );
     }
 
@@ -274,7 +331,10 @@ export async function POST(request: Request) {
       recordedAt,
       topic,
       usage: {
-        ...buildTutorUsage(tutorRequestLimit, limitResult),
+        ...buildTutorUsage(tutorRequestLimit, {
+          remaining: Math.max(0, limitResult.remaining - 1),
+          resetAt: limitResult.resetAt,
+        }),
         plan: hasProAccess({
           configured: true,
           customerId: null,

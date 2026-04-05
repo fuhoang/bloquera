@@ -3,12 +3,16 @@ import { POST } from "@/app/api/chat/route";
 const createTutorReply = vi.fn();
 const getUser = vi.fn();
 const createServerSupabaseClient = vi.fn();
-const checkRateLimit = vi.fn();
 const insert = vi.fn();
 const from = vi.fn();
 const subscriptionMaybeSingle = vi.fn();
 const subscriptionEq = vi.fn();
 const subscriptionSelect = vi.fn();
+const activityUsageLt = vi.fn();
+const activityUsageGte = vi.fn();
+const activityUsageEqType = vi.fn();
+const activityUsageEqUser = vi.fn();
+const activityUsageSelect = vi.fn();
 const cookies = vi.fn();
 const cookieGet = vi.fn();
 
@@ -25,21 +29,21 @@ vi.mock("next/headers", () => ({
   cookies: () => cookies(),
 }));
 
-vi.mock("@/lib/rate-limit", () => ({
-  checkRateLimit: (...args: unknown[]) => checkRateLimit(...args),
-}));
-
 describe("chat route", () => {
   beforeEach(() => {
     createTutorReply.mockReset();
     getUser.mockReset();
     createServerSupabaseClient.mockReset();
-    checkRateLimit.mockReset();
     insert.mockReset();
     from.mockReset();
     subscriptionMaybeSingle.mockReset();
     subscriptionEq.mockReset();
     subscriptionSelect.mockReset();
+    activityUsageLt.mockReset();
+    activityUsageGte.mockReset();
+    activityUsageEqType.mockReset();
+    activityUsageEqUser.mockReset();
+    activityUsageSelect.mockReset();
     cookies.mockReset();
     cookieGet.mockReset();
     createServerSupabaseClient.mockResolvedValue({
@@ -55,11 +59,6 @@ describe("chat route", () => {
         },
       },
     });
-    checkRateLimit.mockReturnValue({
-      allowed: true,
-      remaining: 9,
-      resetAt: Date.now() + 60_000,
-    });
     subscriptionMaybeSingle.mockResolvedValue({ data: null });
     subscriptionEq.mockReturnValue({
       maybeSingle: subscriptionMaybeSingle,
@@ -67,10 +66,30 @@ describe("chat route", () => {
     subscriptionSelect.mockReturnValue({
       eq: subscriptionEq,
     });
+    activityUsageLt.mockResolvedValue({ count: 0 });
+    activityUsageGte.mockReturnValue({
+      lt: activityUsageLt,
+    });
+    activityUsageEqType.mockReturnValue({
+      gte: activityUsageGte,
+    });
+    activityUsageEqUser.mockReturnValue({
+      eq: activityUsageEqType,
+    });
+    activityUsageSelect.mockReturnValue({
+      eq: activityUsageEqUser,
+    });
     from.mockImplementation((table: string) => {
       if (table === "subscriptions") {
         return {
           select: subscriptionSelect,
+        };
+      }
+
+      if (table === "learning_activity") {
+        return {
+          insert,
+          select: activityUsageSelect,
         };
       }
 
@@ -156,11 +175,6 @@ describe("chat route", () => {
       }),
     );
 
-    expect(checkRateLimit).not.toHaveBeenCalledWith(
-      expect.stringMatching(/^chat:guest:/),
-      3,
-      60_000,
-    );
     expect(from).not.toHaveBeenCalledWith("learning_activity");
     expect(response.status).toBe(200);
     expect(response.headers.get("set-cookie")).toContain("blockwise_guest_tutor_id=");
@@ -368,11 +382,7 @@ describe("chat route", () => {
         updated_at: "2026-03-01T00:00:00.000Z",
       },
     });
-    checkRateLimit.mockReturnValue({
-      allowed: true,
-      remaining: 29,
-      resetAt: Date.now() + 60_000,
-    });
+    activityUsageLt.mockResolvedValue({ count: 0 });
     createTutorReply.mockResolvedValue("Bitcoin reply");
 
     const response = await POST(
@@ -385,10 +395,13 @@ describe("chat route", () => {
       }),
     );
 
-    expect(checkRateLimit).toHaveBeenCalledWith(
-      "chat:user-1",
-      30,
-      60_000,
+    expect(activityUsageSelect).toHaveBeenCalledWith("id", {
+      count: "exact",
+      head: true,
+    });
+    expect(activityUsageEqUser).toHaveBeenCalledWith(
+      "user_id",
+      "user-1",
     );
     await expect(response.json()).resolves.toEqual(
       expect.objectContaining({
@@ -401,12 +414,8 @@ describe("chat route", () => {
     );
   });
 
-  it("rate limits repeated tutor requests", async () => {
-    checkRateLimit.mockReturnValue({
-      allowed: false,
-      remaining: 0,
-      resetAt: Date.now() + 60_000,
-    });
+  it("rate limits tutor requests once the daily allowance is exhausted", async () => {
+    activityUsageLt.mockResolvedValue({ count: 10 });
 
     const response = await POST(
       new Request("http://localhost/api/chat", {
@@ -421,7 +430,26 @@ describe("chat route", () => {
     expect(response.status).toBe(429);
     expect(response.headers.get("retry-after")).toBeTruthy();
     await expect(response.json()).resolves.toEqual({
-      error: "You have reached the tutor limit for now. Please try again in a minute.",
+      error: "You have reached your tutor limit for today. Please come back tomorrow.",
+    });
+  });
+
+  it("returns a service-unavailable response when daily usage cannot be loaded", async () => {
+    activityUsageLt.mockRejectedValue(new Error("usage unavailable"));
+
+    const response = await POST(
+      new Request("http://localhost/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: "What is Bitcoin?" }),
+      }),
+    );
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({
+      error: "Unable to load tutor usage right now.",
     });
   });
 

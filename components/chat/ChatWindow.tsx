@@ -104,12 +104,12 @@ export function ChatWindow({
         {usage ? (
           <div className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-[11px] uppercase tracking-[0.14em] text-zinc-400">
             {usage.plan === "pro"
-              ? `Pro account · ${usage.remaining} of ${usage.limit} tutor questions left this minute`
+              ? `Pro account · ${usage.remaining} of ${usage.limit} tutor questions left today`
               : requestSource === "home"
                 ? usage.limit <= 3
                   ? `Guest demo · ${usage.remaining} of ${usage.limit} questions left`
-                  : `Free account · ${usage.remaining} of ${usage.limit} tutor questions left`
-                : `Free account · ${usage.remaining} of ${usage.limit} tutor questions left this minute`}
+                  : `Free account · ${usage.remaining} of ${usage.limit} tutor questions left today`
+                : `Free account · ${usage.remaining} of ${usage.limit} tutor questions left today`}
           </div>
         ) : <div className="flex-1" />}
         {onClose ? (
