@@ -1,6 +1,10 @@
 import { buildAuthCallbackUrl, sanitizeNextPath } from "@/lib/auth-redirects";
 
 describe("auth redirect helpers", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("keeps internal absolute paths", () => {
     expect(sanitizeNextPath("/profiles")).toBe("/profiles");
   });
@@ -18,5 +22,13 @@ describe("auth redirect helpers", () => {
     expect(
       buildAuthCallbackUrl("http://localhost:3000", "https://evil.example"),
     ).toBe("http://localhost:3000/auth/callback?next=%2Flearn");
+  });
+
+  it("prefers NEXT_PUBLIC_SITE_URL when configured", () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://bloquera-chi.vercel.app");
+
+    expect(buildAuthCallbackUrl("http://localhost:3000", "/learn")).toBe(
+      "https://bloquera-chi.vercel.app/auth/callback?next=%2Flearn",
+    );
   });
 });

@@ -11,8 +11,16 @@ export function sanitizeNextPath(nextPath?: string | null) {
   return nextPath;
 }
 
+function normalizeOrigin(origin: string) {
+  return origin.replace(/\/$/, "");
+}
+
 export function buildAuthCallbackUrl(origin: string, nextPath?: string | null) {
-  const callbackUrl = new URL("/auth/callback", origin);
+  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL;
+  const callbackUrl = new URL(
+    "/auth/callback",
+    configuredOrigin ? normalizeOrigin(configuredOrigin) : normalizeOrigin(origin),
+  );
   callbackUrl.searchParams.set("next", sanitizeNextPath(nextPath));
   return callbackUrl.toString();
 }
