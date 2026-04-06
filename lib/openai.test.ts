@@ -62,7 +62,7 @@ describe("openai helpers", () => {
     const reply = await createTutorReply("What is Bitcoin?");
 
     expect(reply).not.toContain("System frame:");
-    expect(reply).not.toContain("You are the Blockwise AI tutor");
+    expect(reply).not.toContain("You are the Bloquera AI tutor");
     expect(reply).not.toContain("Current topic focus:");
   });
 
@@ -105,7 +105,7 @@ describe("openai helpers", () => {
     const { createTutorReply } = await import("@/lib/openai");
     const reply = await createTutorReply("Hello");
 
-    expect(reply).toContain("Hi, I’m the Blockwise AI tutor.");
+    expect(reply).toContain("Hi, I’m the Bloquera AI tutor.");
     expect(reply).toContain("I explain Bitcoin and crypto basics in simple language for beginners.");
     expect(responsesCreate).not.toHaveBeenCalled();
   });

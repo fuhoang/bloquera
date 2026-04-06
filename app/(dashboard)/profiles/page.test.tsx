@@ -87,7 +87,7 @@ describe("profiles page route", () => {
 
     render(page);
 
-    expect(screen.getByText("Your BlockWise account")).toBeInTheDocument();
+    expect(screen.getByText("Your Bloquera account")).toBeInTheDocument();
     expect(screen.getByText("Satoshi")).toBeInTheDocument();
     expect(screen.getByText("user@example.com")).toBeInTheDocument();
     expect(screen.getByTestId("profile-details-form")).toHaveTextContent(

@@ -9,7 +9,7 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Purchases",
-  description: "View your Blockwise plan access, billing hub, and future purchase history.",
+  description: "View your Bloquera plan access, billing hub, and future purchase history.",
   pathname: "/purchases",
   noIndex: true,
 });
@@ -105,7 +105,7 @@ export default async function PurchasesPage() {
             Subscription and purchase history
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-400 sm:text-lg">
-            This is the billing hub for your Blockwise account. It reflects your
+            This is the billing hub for your Bloquera account. It reflects your
             current access level, current subscription state, and recent Stripe
             purchase events.
           </p>

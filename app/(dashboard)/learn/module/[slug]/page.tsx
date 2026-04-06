@@ -18,7 +18,7 @@ export async function generateMetadata({
   if (!currentModule) {
     return createPageMetadata({
       title: "Curriculum module",
-      description: "Blockwise Bitcoin curriculum module.",
+      description: "Bloquera Bitcoin curriculum module.",
       pathname: `/learn/module/${slug}`,
       noIndex: true,
     });

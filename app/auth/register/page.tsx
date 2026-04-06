@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Create account",
-  description: "Create a Blockwise account to save lesson progress, quizzes, and tutor history.",
+  description: "Create a Bloquera account to save lesson progress, quizzes, and tutor history.",
   pathname: "/auth/register",
   noIndex: true,
 });

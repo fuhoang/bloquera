@@ -47,7 +47,7 @@ export function createPageMetadata({
       title,
       description,
       url: canonical,
-      siteName: "Blockwise",
+      siteName: "Bloquera",
       type: "website",
       images: [
         {

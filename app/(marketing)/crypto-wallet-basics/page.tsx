@@ -10,7 +10,7 @@ export const metadata: Metadata = createPageMetadata({
   title: "Crypto wallet basics",
   description:
     guide?.description ??
-    "Understand crypto wallet basics with guided explanations in Blockwise.",
+    "Understand crypto wallet basics with guided explanations in Bloquera.",
   pathname: "/crypto-wallet-basics",
   imagePath: "/crypto-wallet-basics/opengraph-image",
 });

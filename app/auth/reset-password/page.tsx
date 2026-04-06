@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Reset password",
-  description: "Reset your Blockwise account password and restore access to your learning progress.",
+  description: "Reset your Bloquera account password and restore access to your learning progress.",
   pathname: "/auth/reset-password",
   noIndex: true,
 });
@@ -31,7 +31,7 @@ export default async function ResetPasswordPage({
           </h1>
           <p className="mt-5 text-base leading-8 text-zinc-400 sm:text-lg">
             This page completes the reset flow after you open the secure email
-            link from Blockwise.
+            link from Bloquera.
           </p>
         </div>
         <ResetPasswordForm

@@ -23,7 +23,7 @@ export async function generateMetadata({
   if (!lesson) {
     return createPageMetadata({
       title: "Lesson",
-      description: "Blockwise Bitcoin lesson.",
+      description: "Bloquera Bitcoin lesson.",
       pathname: `/learn/${slug}`,
       noIndex: true,
     });

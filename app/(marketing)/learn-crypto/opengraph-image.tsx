@@ -1,7 +1,7 @@
 import { renderGuideOpenGraphImage } from "@/components/marketing/GuideOpenGraphImage";
 import { getPublicGuide } from "@/lib/public-guides";
 
-export const alt = "Learn crypto with Blockwise";
+export const alt = "Learn crypto with Bloquera";
 export { contentType, size } from "@/components/marketing/GuideOpenGraphImage";
 
 export default function LearnCryptoOpenGraphImage() {

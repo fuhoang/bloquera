@@ -37,25 +37,8 @@ export function renderGuideOpenGraphImage(guide: PublicGuide) {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "16px",
             }}
           >
-            <div
-              style={{
-                width: 68,
-                height: 68,
-                borderRadius: 18,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "#f97316",
-                color: "#09090b",
-                fontSize: 30,
-                fontWeight: 800,
-              }}
-            >
-              BW
-            </div>
             <div
               style={{
                 display: "flex",
@@ -63,7 +46,7 @@ export function renderGuideOpenGraphImage(guide: PublicGuide) {
                 gap: "6px",
               }}
             >
-              <div style={{ fontSize: 28, fontWeight: 700 }}>Blockwise</div>
+              <div style={{ fontSize: 28, fontWeight: 700 }}>Bloquera</div>
               <div style={{ fontSize: 18, color: "rgba(255,255,255,0.65)" }}>
                 {guide.eyebrow}
               </div>

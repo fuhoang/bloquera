@@ -14,7 +14,7 @@ export function HomeGuidesSection() {
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-zinc-400">
             These public pages explain the basics clearly, give search engines
             real educational content to index, and point beginners toward the
-            live Bitcoin track inside Blockwise.
+            live Bitcoin track inside Bloquera.
           </p>
         </div>
 

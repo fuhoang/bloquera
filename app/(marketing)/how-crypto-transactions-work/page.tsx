@@ -10,7 +10,7 @@ export const metadata: Metadata = createPageMetadata({
   title: "How crypto transactions work",
   description:
     guide?.description ??
-    "Learn how crypto transactions work with Blockwise.",
+    "Learn how crypto transactions work with Bloquera.",
   pathname: "/how-crypto-transactions-work",
   imagePath: "/how-crypto-transactions-work/opengraph-image",
 });

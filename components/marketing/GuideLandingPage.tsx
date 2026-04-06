@@ -21,7 +21,7 @@ export function GuideLandingPage({ guide }: { guide: PublicGuide }) {
         url: absoluteUrl(guide.href),
         provider: {
           "@type": "Organization",
-          name: "Blockwise",
+          name: "Bloquera",
         },
       },
       {
@@ -132,7 +132,7 @@ export function GuideLandingPage({ guide }: { guide: PublicGuide }) {
               Keep the public guide, then move into the full learning flow.
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-300">
-              Blockwise combines short lessons, quizzes, saved progress, and the AI
+              Bloquera combines short lessons, quizzes, saved progress, and the AI
               tutor so beginners can build understanding without jumping between random
               videos and threads.
             </p>

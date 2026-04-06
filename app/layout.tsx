@@ -14,14 +14,14 @@ const googleSans = Google_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Blockwise",
-    template: "%s | Blockwise",
+    default: "Bloquera",
+    template: "%s | Bloquera",
   },
   description:
-    "Blockwise helps beginners learn crypto with structured lessons, quizzes, dashboard progress, and an AI tutor, starting with a live Bitcoin track.",
-  applicationName: "Blockwise",
+    "Bloquera helps beginners learn crypto with structured lessons, quizzes, dashboard progress, and an AI tutor, starting with a live Bitcoin track.",
+  applicationName: "Bloquera",
   keywords: [
-    "Blockwise",
+    "Bloquera",
     "crypto course",
     "learn crypto",
     "crypto lessons",
@@ -37,16 +37,16 @@ export const metadata: Metadata = {
     canonical: absoluteUrl("/"),
   },
   openGraph: {
-    title: "Blockwise",
+    title: "Bloquera",
     description:
       "Structured crypto learning with lessons, quizzes, dashboard progress, and an AI tutor, starting with Bitcoin.",
     url: absoluteUrl("/"),
-    siteName: "Blockwise",
+    siteName: "Bloquera",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blockwise",
+    title: "Bloquera",
     description:
       "Structured crypto learning with lessons, quizzes, dashboard progress, and an AI tutor, starting with Bitcoin.",
   },

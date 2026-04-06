@@ -188,8 +188,8 @@ describe("chat route", () => {
 
     expect(from).not.toHaveBeenCalledWith("learning_activity");
     expect(response.status).toBe(200);
-    expect(response.headers.get("set-cookie")).toContain("blockwise_guest_tutor_id=");
-    expect(response.headers.get("set-cookie")).toContain("blockwise_guest_tutor_usage=");
+    expect(response.headers.get("set-cookie")).toContain("bloquera_guest_tutor_id=");
+    expect(response.headers.get("set-cookie")).toContain("bloquera_guest_tutor_usage=");
     await expect(response.json()).resolves.toEqual({
       reply: "Bitcoin reply",
       recordedAt: expect.any(String),
@@ -208,13 +208,13 @@ describe("chat route", () => {
       data: { user: null },
     });
     cookieGet.mockImplementation((name: string) => {
-      if (name === "blockwise_guest_tutor_id") {
+      if (name === "bloquera_guest_tutor_id") {
         return {
           value: "guest-1",
         };
       }
 
-      if (name === "blockwise_guest_tutor_usage") {
+      if (name === "bloquera_guest_tutor_usage") {
         return {
           value: JSON.stringify({
             count: 3,
@@ -253,13 +253,13 @@ describe("chat route", () => {
       data: { user: null },
     });
     cookieGet.mockImplementation((name: string) => {
-      if (name === "blockwise_guest_tutor_id") {
+      if (name === "bloquera_guest_tutor_id") {
         return {
           value: "guest-1",
         };
       }
 
-      if (name === "blockwise_guest_tutor_usage") {
+      if (name === "bloquera_guest_tutor_usage") {
         return {
           value: JSON.stringify({
             count: 3,
@@ -298,7 +298,7 @@ describe("chat route", () => {
     });
     createTutorReply.mockResolvedValue("Bitcoin reply");
     cookieGet.mockImplementation((name: string) => {
-      if (name === "blockwise_guest_tutor_usage") {
+      if (name === "bloquera_guest_tutor_usage") {
         return {
           value: JSON.stringify({
             count: 2,
@@ -320,7 +320,7 @@ describe("chat route", () => {
     );
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("set-cookie")).toContain("blockwise_guest_tutor_usage=");
+    expect(response.headers.get("set-cookie")).toContain("bloquera_guest_tutor_usage=");
     await expect(response.json()).resolves.toEqual({
       reply: "Bitcoin reply",
       recordedAt: expect.any(String),

@@ -10,7 +10,7 @@ export const metadata: Metadata = createPageMetadata({
   title: "What is Bitcoin",
   description:
     guide?.description ??
-    "Learn what Bitcoin is in plain language with Blockwise.",
+    "Learn what Bitcoin is in plain language with Bloquera.",
   pathname: "/what-is-bitcoin",
   imagePath: "/what-is-bitcoin/opengraph-image",
 });

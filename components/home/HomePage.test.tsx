@@ -169,7 +169,7 @@ describe("HomePage", () => {
     expect(screen.getByText("How crypto transactions work for beginners")).toBeInTheDocument();
     expect(screen.getByText("Crypto security basics for beginners")).toBeInTheDocument();
     expect(screen.getByText("Common questions before you start learning.")).toBeInTheDocument();
-    expect(screen.getByText("Is Blockwise for complete beginners?")).toBeInTheDocument();
+    expect(screen.getByText("Is Bloquera for complete beginners?")).toBeInTheDocument();
     expect(screen.getAllByText("Read guide")).toHaveLength(6);
     expect(screen.getByText("Monthly plan")).toBeInTheDocument();
     expect(screen.getByText("Yearly plan")).toBeInTheDocument();

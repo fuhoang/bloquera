@@ -24,7 +24,7 @@ function createRequest(pathname: string, method = "GET") {
     nextUrl: {
       pathname,
     },
-    url: `https://blockwise.dev${pathname}`,
+    url: `https://bloquera.dev${pathname}`,
   } as never;
 }
 
@@ -55,7 +55,7 @@ describe("proxy behavior", () => {
     const response = await proxy(createRequest("/profiles"));
 
     expect(response).toEqual({
-      location: "https://blockwise.dev/auth/login?next=%2Fprofiles",
+      location: "https://bloquera.dev/auth/login?next=%2Fprofiles",
       type: "redirect",
     });
   });
@@ -66,7 +66,7 @@ describe("proxy behavior", () => {
     const response = await proxy(createRequest("/purchases"));
 
     expect(response).toEqual({
-      location: "https://blockwise.dev/auth/login?next=%2Fpurchases",
+      location: "https://bloquera.dev/auth/login?next=%2Fpurchases",
       type: "redirect",
     });
   });
@@ -81,7 +81,7 @@ describe("proxy behavior", () => {
     const response = await proxy(createRequest("/auth/login"));
 
     expect(response).toEqual({
-      location: "https://blockwise.dev/learn",
+      location: "https://bloquera.dev/learn",
       type: "redirect",
     });
   });

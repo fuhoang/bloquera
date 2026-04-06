@@ -10,7 +10,7 @@ export const metadata: Metadata = createPageMetadata({
   title: "Learn crypto",
   description:
     guide?.description ??
-    "Learn crypto with a beginner-friendly roadmap in Blockwise.",
+    "Learn crypto with a beginner-friendly roadmap in Bloquera.",
   pathname: "/learn-crypto",
   imagePath: "/learn-crypto/opengraph-image",
 });

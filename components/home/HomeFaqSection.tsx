@@ -11,7 +11,7 @@ export function HomeFaqSection() {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-zinc-400">
             The public guides explain the basics, and these answers clarify how
-            Blockwise is positioned today.
+            Bloquera is positioned today.
           </p>
         </div>
 
