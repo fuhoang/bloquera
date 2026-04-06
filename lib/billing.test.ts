@@ -153,7 +153,7 @@ describe("billing helpers", () => {
     expect(status.billingStatus).toBe("Active subscription");
     expect(status.checkoutCtaLabel).toBe("Change plan");
     expect(hasProAccess(snapshot)).toBe(true);
-    expect(getTutorRequestLimit(snapshot)).toBe(30);
+    expect(getTutorRequestLimit(snapshot)).toBe(60);
   });
 
   it("keeps free users on the lower tutor limit", async () => {

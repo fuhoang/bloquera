@@ -4,6 +4,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { PurchasesFolderTabs } from "@/components/purchases/PurchasesFolderTabs";
 import { moduleConfig } from "@/content/config";
 import { getBillingContextForCurrentUser } from "@/lib/account-status";
+import { getTutorRequestLimit } from "@/lib/billing";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
@@ -20,7 +21,7 @@ export default async function PurchasesPage() {
     await getBillingContextForCurrentUser();
   const purchaseCount = billingSnapshot.purchaseEvents.length;
   const premiumModules = moduleConfig.filter((module) => module.requiresPro);
-  const tutorLimit = accountStatus.planLabel === "Pro" ? 30 : 10;
+  const tutorLimit = getTutorRequestLimit(billingSnapshot);
   const subscription = billingSnapshot.subscription;
   const latestInvoicePaid = billingSnapshot.purchaseEvents.find(
     (event) => event.event_type === "invoice.paid",
@@ -48,6 +49,7 @@ export default async function PurchasesPage() {
       ? `Cancellation is scheduled. Pro access remains active until ${renewalLabel}.`
       : `Your ${planCadenceLabel.toLowerCase()} renews on ${renewalLabel}.${latestInvoicePaid ? ` Latest paid invoice: ${invoiceSummary}.` : ""}`
     : null;
+  const tutorAllowanceLabel = `${tutorLimit} AI tutor questions per day`;
   const subscriptionTimeline = subscription
     ? [
         {
@@ -119,7 +121,7 @@ export default async function PurchasesPage() {
           purchaseEvents={billingSnapshot.purchaseEvents}
           subscriptionTimeline={subscriptionTimeline}
           timelineSummary={timelineSummary}
-          tutorLimit={tutorLimit}
+          tutorAllowanceLabel={tutorAllowanceLabel}
         />
       </div>
     </main>

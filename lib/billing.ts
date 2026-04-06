@@ -38,28 +38,29 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   "Everything in the free plan",
+  "60 AI tutor questions per day",
   "Priority access to premium tracks and future modules",
-  "Expanded tutor usage and billing history",
+  "Billing history and portal access",
 ];
 
 const UPCOMING_FEATURES = [
   "Priority learning tracks and future premium modules",
   "Billing history, invoices, and plan management",
-  "Expanded tutor access and premium account insights",
+  "Premium account insights and deeper learning controls",
 ];
 
 const PRO_ACCESS_STATUSES: BillingStatus[] = ["active", "trialing", "past_due"];
 const FREE_TUTOR_REQUEST_LIMIT = 10;
-const PRO_TUTOR_REQUEST_LIMIT = 30;
+const PRO_TUTOR_REQUEST_LIMIT = 60;
 const ACCOUNT_STATUS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: "2-digit",
   month: "short",
   year: "numeric",
 };
 const FREE_PLAN_SUMMARY =
-  "You can access the full live Bitcoin curriculum, quizzes, dashboard history, and account tools on the free plan today.";
+  "You can access the full live Bitcoin curriculum, quizzes, dashboard history, account tools, and 10 AI tutor questions per day on the free plan today.";
 const PRO_PLAN_SUMMARY =
-  "Your account has Pro billing access, including future premium tracks, stronger tutor access, and purchase history in the billing hub.";
+  "Your account has Pro billing access, including future premium tracks, 60 AI tutor questions per day, and purchase history in the billing hub.";
 
 const E2E_BILLING_SNAPSHOT: BillingSnapshot = {
   configured: true,
@@ -184,7 +185,7 @@ function buildFreeAccountStatus(): AccountStatus {
     includedFeatures: FREE_FEATURES,
     upcomingFeatures: UPCOMING_FEATURES,
     nextStep:
-      "Choose a Pro plan to unlock future premium tracks, invoice history, and expanded tutor access.",
+      "Choose a Pro plan to unlock future premium tracks, invoice history, and 60 AI tutor questions per day.",
     planLabel: "Free",
     planSummary: FREE_PLAN_SUMMARY,
   };
@@ -212,7 +213,7 @@ function buildActiveAccountStatus(subscription: SubscriptionRecord): AccountStat
       : ["More premium tracks and usage controls will build on this plan."],
     nextStep: subscription.cancel_at_period_end
       ? "Reactivate with a new checkout session before the current billing period ends if you want uninterrupted access."
-      : "Use the billing hub to review renewals, payment history, and plan options.",
+      : "Use the billing hub to review renewals, payment history, and your daily tutor allowance.",
     planLabel: "Pro",
     planSummary: PRO_PLAN_SUMMARY,
   };
