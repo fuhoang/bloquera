@@ -27,7 +27,7 @@ export function HomePricingSection({
           {homePricingPlans.map((plan) => (
             <div
               key={plan.name}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6"
+              className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/5 p-6"
             >
               <p className="text-sm text-zinc-500">{plan.name}</p>
               <p className="mt-3 text-4xl font-semibold text-white">
@@ -39,6 +39,7 @@ export function HomePricingSection({
               <p className="mt-4 text-sm leading-7 text-zinc-400">
                 {plan.description}
               </p>
+              <div className="mt-auto">
               {isCurrentPlan(plan.plan, currentPlanSlug) ? (
                 <span
                   aria-disabled="true"
@@ -54,11 +55,10 @@ export function HomePricingSection({
                   plan={plan.plan}
                 />
               )}
-              {plan.footnote ? (
-                <p className="mt-3 text-center text-xs text-zinc-500">
-                  {plan.footnote}
+                <p className="mt-3 min-h-5 text-center text-xs text-zinc-500">
+                  {plan.footnote ?? "\u00A0"}
                 </p>
-              ) : null}
+              </div>
             </div>
           ))}
         </div>

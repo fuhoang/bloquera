@@ -20,6 +20,27 @@ npm run lint
 npm run build
 ```
 
+## Vercel Deployment
+
+Before deploying to Vercel, configure these project environment variables:
+
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `STRIPE_PRO_MONTHLY_PRICE_ID`
+- `STRIPE_PRO_YEARLY_PRICE_ID`
+- `OPENAI_API_KEY`
+- `OPENAI_MODEL`
+
+Notes:
+
+- Set `NEXT_PUBLIC_SITE_URL` to your production domain, for example `https://bloquera.com`.
+- Do not copy local secret values from `.env.local` into source control.
+- Vercel can use the existing `npm run build` command with this Next.js app directly.
+
 ## Git Flow
 
 This repository uses the Gitflow branching model.
