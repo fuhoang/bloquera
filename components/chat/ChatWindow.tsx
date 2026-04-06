@@ -48,6 +48,10 @@ export function ChatWindow({
     () => messages.some((message) => message.role === "user"),
     [messages],
   );
+  const firstAssistantMessage = useMemo(
+    () => messages.find((message) => message.role === "assistant") ?? null,
+    [messages],
+  );
   const isGuestLimitReached =
     isHomeChat &&
     (
@@ -124,11 +128,11 @@ export function ChatWindow({
         {isHomeChat && !hasUserMessages ? (
           <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5 text-left">
             <p className="text-sm font-semibold text-white">
-              Start with a simple question
+              Ask a Bitcoin question
             </p>
             <p className="mt-2 text-sm leading-7 text-zinc-400">
-              Use the demo to understand Bitcoin, wallets, and basic crypto concepts
-              before you create an account.
+              Start with one clear question about Bitcoin, wallets, or crypto basics
+              and keep it simple.
             </p>
             <p className="mt-2 text-xs leading-6 text-zinc-500">
               Safety tip: never share a private key, password, or recovery phrase in
@@ -138,7 +142,7 @@ export function ChatWindow({
               {starterPrompts.map((prompt) => (
                 <button
                   key={prompt}
-                  className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-xs font-medium text-zinc-200 transition hover:border-orange-400/30 hover:bg-orange-500/10 hover:text-orange-100"
+                  className="rounded-full border border-white/10 bg-black/30 px-3.5 py-2 text-[11px] font-medium text-zinc-200 transition hover:border-orange-400/30 hover:bg-orange-500/10 hover:text-orange-100"
                   type="button"
                   onClick={() => submitStarter(prompt)}
                 >
@@ -151,6 +155,25 @@ export function ChatWindow({
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />
         ))}
+        {isHomeChat && firstAssistantMessage && !isLoading && !isGuestLimitReached ? (
+          <div className="max-w-[72%] rounded-[1.5rem] border border-white/10 bg-white/[0.03] px-4 py-3 text-left">
+            <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+              Try next
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {starterPrompts.map((prompt) => (
+                <button
+                  key={`followup-${prompt}`}
+                  className="rounded-full border border-white/10 bg-black/30 px-3 py-1.5 text-[11px] font-medium text-zinc-200 transition hover:border-orange-400/30 hover:bg-orange-500/10 hover:text-orange-100"
+                  type="button"
+                  onClick={() => submitStarter(prompt)}
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
         {isLoading ? (
           <div className="max-w-[85%] rounded-3xl border border-white/10 bg-black px-4 py-3 text-sm leading-7 text-white">
             Thinking...
@@ -162,15 +185,18 @@ export function ChatWindow({
           </div>
         ) : null}
         {isGuestLimitReached ? (
-          <div className="max-w-[85%] rounded-[1.75rem] border border-orange-400/20 bg-orange-500/10 p-5 text-left">
-            <p className="text-sm font-semibold text-orange-100">
+          <div className="max-w-[85%] rounded-[1.75rem] border border-orange-400/20 bg-gradient-to-br from-orange-500/12 to-orange-500/5 p-5 text-left shadow-[0_18px_60px_rgba(249,115,22,0.12)]">
+            <p className="text-[11px] uppercase tracking-[0.14em] text-orange-200/70">
+              Guest demo complete
+            </p>
+            <p className="mt-2 text-base font-semibold text-orange-100">
               Your guest demo is complete
             </p>
-            <p className="mt-2 text-sm leading-7 text-orange-50/85">
+            <p className="mt-2 max-w-md text-sm leading-7 text-orange-50/85">
               Create a free account to unlock 10 tutor questions per day, save your
               progress, and keep learning with the AI tutor.
             </p>
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 className="inline-flex items-center justify-center rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-black transition hover:bg-orange-400"
                 href="/auth/register"

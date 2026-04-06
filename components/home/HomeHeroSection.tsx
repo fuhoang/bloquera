@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { SoftAurora } from "@/components/home/SoftAurora";
 import {
   homeHeroChatStarters,
-  homeChatStarters,
+  homeInChatStarters,
   homePromptHighlights,
 } from "@/components/home/homeData";
 
@@ -141,7 +141,7 @@ export function HomeHeroSection({
                 className="flex h-full flex-col overflow-hidden border border-white/10 bg-black"
                 initialUsage={initialUsage}
                 requestSource="home"
-                starterPrompts={homeChatStarters}
+                starterPrompts={homeInChatStarters}
                 submittedPrompt={submittedPrompt}
                 submittedPromptVersion={promptVersion}
                 onClose={() => setIsChatOpen(false)}

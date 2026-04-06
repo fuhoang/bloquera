@@ -74,6 +74,12 @@ export const homeChatStarters = [
 
 export const homeHeroChatStarters = homeChatStarters.slice(0, 2);
 
+export const homeInChatStarters = [
+  "Explain Bitcoin simply",
+  "How do wallets work?",
+  "Why do fees exist?",
+] as const;
+
 export const homePublicGuides = publicGuides;
 
 export const homeFaq = [
