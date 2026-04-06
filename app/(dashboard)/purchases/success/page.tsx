@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo";
 export const metadata: Metadata = createPageMetadata({
   title: "Payment successful",
   description:
-    "Your Blockwise payment was successful. Review your plan access and continue learning.",
+    "Your Bloquera payment was successful. Review your plan access and continue learning.",
   pathname: "/purchases/success",
   noIndex: true,
 });
@@ -26,7 +26,7 @@ export default async function PurchaseSuccessPage() {
             Payment successful
           </p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-            Your Blockwise plan is ready.
+            Your Bloquera plan is ready.
           </h1>
           <p className="mt-5 text-base leading-8 text-emerald-50/85 sm:text-lg">
             Your payment went through successfully. Your account now reflects

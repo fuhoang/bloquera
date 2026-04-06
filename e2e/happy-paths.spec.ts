@@ -56,12 +56,12 @@ test.describe("happy paths", () => {
 
     await page.context().addCookies([
       {
-        name: "blockwise_guest_tutor_id",
+        name: "bloquera_guest_tutor_id",
         value: "guest-e2e-user",
         url: baseURL ?? "http://127.0.0.1:3100",
       },
       {
-        name: "blockwise_guest_tutor_usage",
+        name: "bloquera_guest_tutor_usage",
         value: JSON.stringify({ count: 3 }),
         url: baseURL ?? "http://127.0.0.1:3100",
       },

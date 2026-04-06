@@ -66,7 +66,7 @@ export function ForgotPasswordForm({
         Reset your password
       </h1>
       <p className="mt-4 text-sm leading-7 text-zinc-400">
-        Enter the email tied to your Blockwise account and we will send you a
+        Enter the email tied to your Bloquera account and we will send you a
         secure reset link.
       </p>
 

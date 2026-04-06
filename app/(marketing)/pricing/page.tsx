@@ -64,7 +64,7 @@ const plans = [
 export const metadata: Metadata = createPageMetadata({
   title: "Pricing",
   description:
-    "View Blockwise pricing for guided crypto learning plans, including the live Bitcoin curriculum, quizzes, and AI tutor support.",
+    "View Bloquera pricing for guided crypto learning plans, including the live Bitcoin curriculum, quizzes, and AI tutor support.",
   pathname: "/pricing",
   imagePath: "/pricing/opengraph-image",
 });
@@ -187,7 +187,7 @@ export default async function PricingPage() {
                 Pay for deeper usage, not basic access.
               </h2>
               <p className="mt-4 text-sm leading-7 text-zinc-400">
-                Blockwise keeps the live Bitcoin curriculum open on the free plan.
+                Bloquera keeps the live Bitcoin curriculum open on the free plan.
                 Pro adds account-level billing tools and the next layer of product
                 depth as premium tracks roll out.
               </p>

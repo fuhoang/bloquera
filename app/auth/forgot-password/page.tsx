@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Forgot password",
-  description: "Request a password reset email for your Blockwise account.",
+  description: "Request a password reset email for your Bloquera account.",
   pathname: "/auth/forgot-password",
   noIndex: true,
 });

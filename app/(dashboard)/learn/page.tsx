@@ -7,7 +7,7 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Curriculum",
-  description: "Browse the Blockwise Bitcoin curriculum, modules, and lesson roadmap.",
+  description: "Browse the Bloquera Bitcoin curriculum, modules, and lesson roadmap.",
   pathname: "/learn",
   noIndex: true,
 });

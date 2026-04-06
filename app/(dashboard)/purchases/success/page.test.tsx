@@ -51,7 +51,7 @@ describe("purchase success page", () => {
     render(page);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Your Blockwise plan is ready." }),
+      screen.getByRole("heading", { level: 1, name: "Your Bloquera plan is ready." }),
     ).toBeInTheDocument();
     expect(screen.getByText("Pro monthly")).toBeInTheDocument();
     expect(

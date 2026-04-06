@@ -113,7 +113,7 @@ export function AccountSecurityForm({
               Change your password
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">
-              Update the password tied to your Blockwise account without leaving
+              Update the password tied to your Bloquera account without leaving
               the app.
             </p>
           </div>

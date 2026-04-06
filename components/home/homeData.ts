@@ -84,22 +84,22 @@ export const homePublicGuides = publicGuides;
 
 export const homeFaq = [
   {
-    question: "Is Blockwise for complete beginners?",
+    question: "Is Bloquera for complete beginners?",
     answer:
       "Yes. The public guides and live curriculum are designed for people who want plain-language explanations and a clearer starting path into crypto.",
   },
   {
-    question: "Why does Blockwise start with Bitcoin?",
+    question: "Why does Bloquera start with Bitcoin?",
     answer:
       "Bitcoin is the live learning track today and gives beginners a strong foundation in money, ownership, wallets, and network trust before newer tracks arrive.",
   },
   {
-    question: "Do I need to buy crypto to use Blockwise?",
+    question: "Do I need to buy crypto to use Bloquera?",
     answer:
       "No. You can use the guides, lessons, and tutor to learn the concepts first and build judgment before deciding whether ownership makes sense for you.",
   },
   {
-    question: "Will Blockwise cover more than Bitcoin later?",
+    question: "Will Bloquera cover more than Bitcoin later?",
     answer:
       "Yes. The product is designed for multiple crypto tracks over time, while keeping the current live learning path focused and coherent.",
   },

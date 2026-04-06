@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Blockwise crypto learning";
+export const alt = "Bloquera crypto learning";
 export const contentType = "image/png";
 export const size = {
   width: 1200,
@@ -28,29 +28,12 @@ export default function OpenGraphImage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "16px",
             fontSize: 28,
             fontWeight: 700,
             letterSpacing: "-0.02em",
           }}
         >
-          <div
-            style={{
-              width: 68,
-              height: 68,
-              borderRadius: 18,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "#f97316",
-              color: "#09090b",
-              fontSize: 30,
-              fontWeight: 800,
-            }}
-          >
-            BW
-          </div>
-          <div>Blockwise</div>
+          <div>Bloquera</div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>

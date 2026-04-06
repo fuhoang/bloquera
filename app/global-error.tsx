@@ -19,7 +19,7 @@ export default function GlobalError({
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full bg-black text-white">
-        <title>Something went wrong | Blockwise</title>
+        <title>Something went wrong | Bloquera</title>
         <FallbackPage
           actions={<RetryAction onRetry={unstable_retry} />}
           description="Something unexpected interrupted this page. Try reloading this section, or head back to the curriculum and continue from there."

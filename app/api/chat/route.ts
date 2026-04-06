@@ -17,8 +17,8 @@ import { createTutorReply, inferTutorTopic } from "@/lib/openai";
 const MAX_MESSAGE_LENGTH = 500;
 const TUTOR_PROMPT_PREVIEW_MAX = 160;
 const GUEST_TUTOR_REQUEST_LIMIT = 3;
-const GUEST_TUTOR_COOKIE = "blockwise_guest_tutor_id";
-const GUEST_TUTOR_USAGE_COOKIE = "blockwise_guest_tutor_usage";
+const GUEST_TUTOR_COOKIE = "bloquera_guest_tutor_id";
+const GUEST_TUTOR_USAGE_COOKIE = "bloquera_guest_tutor_usage";
 const GUEST_TUTOR_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 const GUEST_LIMIT_ERROR =
   "You have used the guest AI demo for now. Log in to keep chatting.";

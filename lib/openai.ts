@@ -87,7 +87,7 @@ const EMPTY_MESSAGE_REPLY =
 const NON_CRYPTO_REPLY =
   "Sorry, I only answer Bitcoin and crypto learning questions here. Try something like: What is Bitcoin? How do wallets work? Why do transaction fees exist?";
 const SMALL_TALK_REPLY =
-  "Hi, I’m the Blockwise AI tutor. I explain Bitcoin and crypto basics in simple language for beginners. Tell me what feels confusing and I’ll break it down clearly.";
+  "Hi, I’m the Bloquera AI tutor. I explain Bitcoin and crypto basics in simple language for beginners. Tell me what feels confusing and I’ll break it down clearly.";
 const PRIVATE_KEY_GUARDRAIL =
   "Never share a private key, seed phrase, or recovery phrase with anyone, including this chat. If you want, I can explain what each one does and how to keep it safe.";
 const FINANCIAL_ADVICE_GUARDRAIL =
@@ -260,8 +260,8 @@ function buildTutorInstructions(topic: TutorTopic) {
   const content = TOPIC_CONTENT[topic];
 
   return [
-    "You are the Blockwise AI tutor for beginners learning Bitcoin and crypto.",
-    "Sound like a calm Blockwise guide for someone who is curious but new and slightly overwhelmed.",
+    "You are the Bloquera AI tutor for beginners learning Bitcoin and crypto.",
+    "Sound like a calm Bloquera guide for someone who is curious but new and slightly overwhelmed.",
     "Explain ideas in very clear, plain English with patient, encouraging wording.",
     "Keep answers short and simple by default.",
     "Use at most 4 sentences unless the user explicitly asks for more depth or a step-by-step breakdown.",

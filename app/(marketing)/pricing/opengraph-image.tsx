@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Blockwise pricing";
+export const alt = "Bloquera pricing";
 export const contentType = "image/png";
 export const size = {
   width: 1200,
@@ -35,7 +35,7 @@ export default function PricingOpenGraphImage() {
             color: "rgba(255,255,255,0.78)",
           }}
         >
-          Blockwise pricing
+          Bloquera pricing
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>

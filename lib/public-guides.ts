@@ -35,9 +35,9 @@ export const publicGuides: PublicGuide[] = [
     summary:
       "Get a practical introduction to crypto through simple explanations, guided lessons, and a live Bitcoin-first learning track.",
     description:
-      "Learn crypto with a beginner-friendly roadmap, starting with a live Bitcoin track, practical explanations, quizzes, and an AI tutor in Blockwise.",
+      "Learn crypto with a beginner-friendly roadmap, starting with a live Bitcoin track, practical explanations, quizzes, and an AI tutor in Bloquera.",
     intro:
-      "Crypto makes more sense when you learn the core ideas in order. Blockwise starts with Bitcoin because it gives beginners a clear foundation in money, wallets, ownership, and network trust before expanding into more tracks.",
+      "Crypto makes more sense when you learn the core ideas in order. Bloquera starts with Bitcoin because it gives beginners a clear foundation in money, wallets, ownership, and network trust before expanding into more tracks.",
     ogTitle: "Learn crypto with a clear path.",
     ogSubtitle: "Beginner lessons, quizzes, and tutor support starting with Bitcoin.",
     sections: [
@@ -59,7 +59,7 @@ export const publicGuides: PublicGuide[] = [
     ],
     faq: [
       {
-        question: "Is Blockwise only for Bitcoin right now?",
+        question: "Is Bloquera only for Bitcoin right now?",
         answer:
           "The live curriculum is Bitcoin-first today, but the product is designed to grow into broader crypto tracks without changing the learning flow.",
       },
@@ -83,7 +83,7 @@ export const publicGuides: PublicGuide[] = [
     summary:
       "Understand Bitcoin step by step with beginner lessons on money, scarcity, wallets, transactions, and security.",
     description:
-      "Explore Bitcoin for beginners with lessons on money, scarcity, wallets, transactions, and self-custody in Blockwise.",
+      "Explore Bitcoin for beginners with lessons on money, scarcity, wallets, transactions, and self-custody in Bloquera.",
     intro:
       "Bitcoin is the best place to start if you want to understand crypto clearly. It teaches the foundations of digital scarcity, ownership, and network verification without requiring you to memorize jargon first.",
     ogTitle: "Bitcoin for beginners.",
@@ -131,7 +131,7 @@ export const publicGuides: PublicGuide[] = [
     summary:
       "Learn what a crypto wallet actually does, how keys work, and how to avoid the most common beginner mistakes.",
     description:
-      "Understand crypto wallet basics, including keys, seed phrases, self-custody, and safer storage habits with Blockwise.",
+      "Understand crypto wallet basics, including keys, seed phrases, self-custody, and safer storage habits with Bloquera.",
     intro:
       "Most beginners think a wallet holds coins. In practice, wallets manage keys and access. Once that clicks, the rest of self-custody becomes much easier to understand.",
     ogTitle: "Crypto wallet basics.",
@@ -157,7 +157,7 @@ export const publicGuides: PublicGuide[] = [
       {
         question: "Is this only about Bitcoin wallets?",
         answer:
-          "The live examples in Blockwise start with Bitcoin, but the underlying wallet concepts apply broadly across crypto.",
+          "The live examples in Bloquera start with Bitcoin, but the underlying wallet concepts apply broadly across crypto.",
       },
       {
         question: "Do I need a hardware wallet immediately?",
@@ -177,9 +177,9 @@ export const publicGuides: PublicGuide[] = [
     eyebrow: "Bitcoin explained",
     title: "What is Bitcoin, in plain language?",
     summary:
-      "Understand Bitcoin as a scarce, open monetary network and why it matters as the live starting track inside Blockwise.",
+      "Understand Bitcoin as a scarce, open monetary network and why it matters as the live starting track inside Bloquera.",
     description:
-      "Learn what Bitcoin is in plain language, why it matters, and how beginners can approach it without technical overload in Blockwise.",
+      "Learn what Bitcoin is in plain language, why it matters, and how beginners can approach it without technical overload in Bloquera.",
     intro:
       "Bitcoin can sound abstract until you frame it around money, ownership, and open verification. For beginners, it is less helpful to memorize buzzwords than to understand why the network exists and what problem it is trying to solve.",
     ogTitle: "What is Bitcoin?",
@@ -208,7 +208,7 @@ export const publicGuides: PublicGuide[] = [
           "Bitcoin is one part of the broader crypto landscape, but it is often the clearest place for beginners to build first-principles understanding.",
       },
       {
-        question: "Why does Blockwise start with Bitcoin?",
+        question: "Why does Bloquera start with Bitcoin?",
         answer:
           "It is the live track today and gives beginners a strong foundation in scarcity, self-custody, and network trust before they compare other systems.",
       },
@@ -227,7 +227,7 @@ export const publicGuides: PublicGuide[] = [
     summary:
       "Learn the simple flow behind addresses, signing, network verification, fees, and confirmations without drowning in jargon.",
     description:
-      "Understand how crypto transactions work, including signing, fees, confirmations, and common beginner mistakes in Blockwise.",
+      "Understand how crypto transactions work, including signing, fees, confirmations, and common beginner mistakes in Bloquera.",
     intro:
       "Crypto transactions are easier to understand when you stop thinking about them like a bank transfer and start thinking about signed messages that a network verifies. That shift makes fees, confirmations, and wallet behavior much more intuitive.",
     ogTitle: "How crypto transactions work.",
@@ -263,7 +263,7 @@ export const publicGuides: PublicGuide[] = [
       {
         question: "Does this guide only apply to Bitcoin?",
         answer:
-          "The live examples in Blockwise are Bitcoin-first, but the basic mental model of signing, broadcasting, and confirmation helps across crypto networks.",
+          "The live examples in Bloquera are Bitcoin-first, but the basic mental model of signing, broadcasting, and confirmation helps across crypto networks.",
       },
     ],
   },
@@ -275,7 +275,7 @@ export const publicGuides: PublicGuide[] = [
     summary:
       "Learn the safety habits that matter most early on: seed phrase handling, phishing awareness, wallet checks, and slowing down before mistakes.",
     description:
-      "Learn crypto security basics in Blockwise, including seed phrase handling, phishing awareness, wallet verification, and safer beginner habits.",
+      "Learn crypto security basics in Bloquera, including seed phrase handling, phishing awareness, wallet verification, and safer beginner habits.",
     intro:
       "Security is where many beginners feel overwhelmed, but the fundamentals are simpler than they look. The goal is not paranoia. It is learning a few habits that reduce the biggest avoidable mistakes before you move real value.",
     ogTitle: "Crypto security basics.",
@@ -311,7 +311,7 @@ export const publicGuides: PublicGuide[] = [
       {
         question: "Is this guide only about Bitcoin security?",
         answer:
-          "The live examples in Blockwise start with Bitcoin, but these core safety habits apply broadly across crypto.",
+          "The live examples in Bloquera start with Bitcoin, but these core safety habits apply broadly across crypto.",
       },
     ],
   },

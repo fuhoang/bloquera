@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Dashboard",
-  description: "View your Blockwise dashboard, tutor analytics, lesson progress, and account summary.",
+  description: "View your Bloquera dashboard, tutor analytics, lesson progress, and account summary.",
   pathname: "/dashboard",
   noIndex: true,
 });

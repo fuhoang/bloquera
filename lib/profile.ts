@@ -7,7 +7,7 @@ import type { Profile } from "@/types/profile";
 
 const E2E_PROFILE: Profile = {
   id: "e2e-profile-id",
-  email: "learner@blockwise.dev",
+  email: "learner@bloquera.dev",
   display_name: "Satoshi Learner",
   avatar_url: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=200&q=80",
   bio: "Learning Bitcoin one clear step at a time.",

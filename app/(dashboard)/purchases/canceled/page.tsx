@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo";
 export const metadata: Metadata = createPageMetadata({
   title: "Payment not completed",
   description:
-    "Your Blockwise payment was not completed. Return to billing to try again or continue learning on your current plan.",
+    "Your Bloquera payment was not completed. Return to billing to try again or continue learning on your current plan.",
   pathname: "/purchases/canceled",
   noIndex: true,
 });

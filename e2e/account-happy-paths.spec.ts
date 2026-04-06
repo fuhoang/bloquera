@@ -9,7 +9,7 @@ test.describe("account happy paths", () => {
         body: JSON.stringify({
           profile: {
             id: "e2e-profile-id",
-            email: "learner@blockwise.dev",
+            email: "learner@bloquera.dev",
             display_name: "Nakamoto Path",
             avatar_url:
               "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=200&q=80",
@@ -57,7 +57,7 @@ test.describe("account happy paths", () => {
         body: JSON.stringify({
           profile: {
             id: "e2e-profile-id",
-            email: "learner@blockwise.dev",
+            email: "learner@bloquera.dev",
             display_name: "Satoshi Learner",
             avatar_url: "https://example.com/avatar-uploaded.png",
             bio: "Learning Bitcoin one clear step at a time.",

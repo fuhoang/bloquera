@@ -75,7 +75,7 @@ export function ResetPasswordForm({
         Choose a new password
       </h1>
       <p className="mt-4 text-sm leading-7 text-zinc-400">
-        Set a fresh password for your Blockwise account after opening the reset
+        Set a fresh password for your Bloquera account after opening the reset
         link from your email.
       </p>
 
