@@ -91,6 +91,9 @@ describe("HomePage", () => {
     expect(screen.getByText("Built for beginners")).toBeInTheDocument();
     expect(screen.getByText("What is Bitcoin in plain English?")).toBeInTheDocument();
     expect(screen.getByText("How do wallets actually work?")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Why do transaction fees exist?" }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps the conversation idle when the prompt is empty", () => {
@@ -138,11 +141,11 @@ describe("HomePage", () => {
   it("opens the conversation from a starter prompt chip", () => {
     render(<HomePage />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Why do transaction fees exist?" }));
+    fireEvent.click(screen.getByRole("button", { name: "How do wallets actually work?" }));
 
     expect(screen.getByTestId("chat-window")).toHaveAttribute(
       "data-prompt",
-      "Why do transaction fees exist?",
+      "How do wallets actually work?",
     );
   });
 

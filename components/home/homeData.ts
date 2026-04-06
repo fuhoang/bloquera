@@ -72,6 +72,8 @@ export const homeChatStarters = [
   "Why do transaction fees exist?",
 ] as const;
 
+export const homeHeroChatStarters = homeChatStarters.slice(0, 2);
+
 export const homePublicGuides = publicGuides;
 
 export const homeFaq = [

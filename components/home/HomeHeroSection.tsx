@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { SoftAurora } from "@/components/home/SoftAurora";
 import {
+  homeHeroChatStarters,
   homeChatStarters,
   homePromptHighlights,
 } from "@/components/home/homeData";
@@ -164,7 +165,7 @@ export function HomeHeroSection({
               />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-2 pt-3">
                 <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-                  {homeChatStarters.map((starter) => (
+                  {homeHeroChatStarters.map((starter) => (
                     <button
                       key={starter}
                       className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-zinc-300 transition hover:border-orange-400/30 hover:bg-orange-500/10 hover:text-orange-100"
