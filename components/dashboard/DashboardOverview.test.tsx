@@ -169,7 +169,7 @@ describe("DashboardOverview", () => {
     expect(screen.getAllByText("Satoshi")).toHaveLength(2);
     expect(screen.getAllByText("Foundations")).toHaveLength(2);
     expect(screen.getByText("No active subscription")).toBeInTheDocument();
-    expect(screen.getByText("10 tutor requests per minute")).toBeInTheDocument();
+    expect(screen.getByText("10 AI tutor questions per day")).toBeInTheDocument();
     expect(
       screen.getByText("1 premium modules available with Pro"),
     ).toBeInTheDocument();

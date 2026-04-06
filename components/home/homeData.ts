@@ -43,7 +43,7 @@ export const homePricingPlans = [
     price: "£14.99",
     cadence: "/month",
     description:
-      "Full curriculum, 30 AI tutor questions per day, quizzes, progress tracking, and deeper security lessons.",
+      "Full curriculum, 60 AI tutor questions per day, quizzes, progress tracking, and deeper security lessons.",
     footnote: null,
     cta: "Start monthly plan",
     plan: "pro_monthly" as const,
@@ -53,7 +53,7 @@ export const homePricingPlans = [
     price: "£149.99",
     cadence: "/year",
     description:
-      "Full curriculum, 30 AI tutor questions per day, quizzes, progress tracking, and deeper security lessons with a fixed annual price.",
+      "Full curriculum, 60 AI tutor questions per day, quizzes, progress tracking, and deeper security lessons with a fixed annual price.",
     footnote: "Save compared with the monthly plan.",
     cta: "Start yearly plan",
     plan: "pro_yearly" as const,

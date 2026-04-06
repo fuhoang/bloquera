@@ -38,7 +38,7 @@ const plans = [
     plan: "pro_monthly" as const,
     features: [
       "Everything in Starter",
-      "30 AI tutor questions per day",
+      "60 AI tutor questions per day",
       "Billing portal and purchase history",
     ],
   },
@@ -54,7 +54,7 @@ const plans = [
     plan: "pro_yearly" as const,
     features: [
       "Everything in Pro Monthly",
-      "30 AI tutor questions per day",
+      "60 AI tutor questions per day",
       "Lower annual cost than paying monthly",
       "Annual billing with full portal access",
     ],
@@ -200,7 +200,7 @@ export default async function PricingPage() {
                 </p>
                 <p className="mt-3 text-sm leading-7 text-zinc-400">
                   Guests can try 3 demo questions before login. Free accounts get
-                  10 tutor questions per day, and Pro plans increase that to 30
+                  10 tutor questions per day, and Pro plans increase that to 60
                   questions per day.
                 </p>
               </div>

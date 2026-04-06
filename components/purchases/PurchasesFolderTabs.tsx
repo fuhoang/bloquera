@@ -23,7 +23,7 @@ type PurchasesFolderTabsProps = {
     value: string;
   }[];
   timelineSummary: string | null;
-  tutorLimit: number;
+  tutorAllowanceLabel: string;
 };
 
 type TabKey = "current_plan" | "billings" | "history_purchases";
@@ -60,7 +60,7 @@ export function PurchasesFolderTabs({
   purchaseCount,
   subscriptionTimeline,
   timelineSummary,
-  tutorLimit,
+  tutorAllowanceLabel,
 }: PurchasesFolderTabsProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("current_plan");
   const activeTabMeta = TAB_COPY.find((tab) => tab.id === activeTab) ?? TAB_COPY[0];
@@ -166,7 +166,7 @@ export function PurchasesFolderTabs({
                   What this plan includes
                 </p>
                 <div className="mt-4 space-y-2 text-sm text-zinc-200">
-                  <p>{tutorLimit} tutor requests per minute</p>
+                  <p>{tutorAllowanceLabel}</p>
                   <p>
                     {accountStatus.planLabel === "Pro"
                       ? `${premiumModules.length} premium modules unlocked`

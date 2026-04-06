@@ -71,7 +71,7 @@ describe("purchases page route", () => {
       screen.getByRole("heading", { level: 2, name: "Free plan" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Satoshi")).toBeInTheDocument();
-    expect(screen.getByText("10 tutor requests per minute")).toBeInTheDocument();
+    expect(screen.getByText("10 AI tutor questions per day")).toBeInTheDocument();
     expect(
       screen.getByText("2 premium modules available with Pro"),
     ).toBeInTheDocument();
@@ -158,7 +158,7 @@ describe("purchases page route", () => {
 
     render(page);
 
-    expect(screen.getByText("30 tutor requests per minute")).toBeInTheDocument();
+    expect(screen.getByText("60 AI tutor questions per day")).toBeInTheDocument();
     expect(screen.getByText("2 premium modules unlocked")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Billings" }));
