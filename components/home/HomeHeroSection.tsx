@@ -4,11 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
 import { SoftAurora } from "@/components/home/SoftAurora";
-import {
-  homeHeroChatStarters,
-  homeInChatStarters,
-  homePromptHighlights,
-} from "@/components/home/homeData";
+import { homeHeroChatStarters, homeInChatStarters } from "@/components/home/homeData";
 
 const ChatWindow = dynamic(
   () => import("@/components/chat/ChatWindow").then((module) => module.ChatWindow),
@@ -107,19 +103,12 @@ export function HomeHeroSection({
             Learn Crypto the easy way.
           </h1>
           <p className="mt-5 text-base leading-8 text-zinc-400 sm:text-lg">
+            Simple lessons. Clear explanations. Step by step.
+          </p>
+          <p className="mt-2 text-sm uppercase tracking-[0.16em] text-zinc-500 sm:text-base">
             Bloquera — Learn crypto with clarity.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-zinc-300">
-            {homePromptHighlights.map((highlight) => (
-              <div
-                key={highlight}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2"
-              >
-                {highlight}
-              </div>
-            ))}
-          </div>
         </div>
 
         <div
