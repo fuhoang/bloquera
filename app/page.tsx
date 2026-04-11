@@ -9,7 +9,7 @@ import { absoluteUrl, createPageMetadata } from "@/lib/seo";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Learn crypto the structured way",
+  title: "Bloquera — Learn crypto with clarity",
   description:
     "Learn crypto with structured beginner lessons, quizzes, progress tracking, and an AI tutor in Bloquera, starting with a live Bitcoin track.",
   pathname: "/",

@@ -107,7 +107,7 @@ export function HomeHeroSection({
             Learn Crypto the easy way.
           </h1>
           <p className="mt-5 text-base leading-8 text-zinc-400 sm:text-lg">
-            Simple lessons. Clear explanations. Step by step.
+            Bloquera — Learn crypto with clarity.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-zinc-300">
