@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { Route } from "next";
 import Link from "next/link";
 
@@ -44,9 +45,17 @@ export function NavbarClient({
         <div className="flex items-center justify-between md:hidden">
           <Link
             href="/"
-            className="flex items-end justify-center"
+            className="flex items-center justify-center gap-3"
             onClick={() => setIsMenuOpen(false)}
           >
+            <Image
+              alt="Bloquera logo"
+              className="h-8 w-auto"
+              height={611}
+              priority
+              src="/bloquera-navbar-icon.png"
+              width={671}
+            />
             <span
               className="text-center text-2xl uppercase tracking-[0.08em] text-white sm:text-3xl"
               style={{ fontFamily: BRAND_FONT_STACK }}
@@ -89,8 +98,16 @@ export function NavbarClient({
         </nav>
         <Link
           href="/"
-          className="hidden items-end justify-center md:flex md:justify-self-center"
+          className="hidden items-center justify-center gap-3 md:flex md:justify-self-center"
         >
+          <Image
+            alt="Bloquera logo"
+            className="h-11 w-auto"
+            height={611}
+            priority
+            src="/bloquera-navbar-icon.png"
+            width={671}
+          />
           <span
             className="text-center text-2xl uppercase tracking-[0.08em] text-white sm:text-3xl md:text-4xl"
             style={{ fontFamily: BRAND_FONT_STACK }}
