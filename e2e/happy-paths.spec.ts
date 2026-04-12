@@ -2,9 +2,11 @@ import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
 async function getHomeChatPrompt(page: Page) {
-  const mobileLauncher = page.getByRole("button", { name: "Open home chat" });
+  const viewportWidth = page.viewportSize()?.width ?? 1280;
 
-  if (await mobileLauncher.isVisible().catch(() => false)) {
+  if (viewportWidth < 768) {
+    const mobileLauncher = page.getByRole("button", { name: "Open home chat" });
+    await expect(mobileLauncher).toBeVisible();
     await mobileLauncher.click();
     return page.locator("#home-mobile-chat input[placeholder='Ask anything about crypto...']");
   }
