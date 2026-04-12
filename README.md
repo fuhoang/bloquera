@@ -1,6 +1,12 @@
-# BlockWise
+# Bloquera
 
-Next.js 16 app for BlockWise.
+Next.js 16 app for Bloquera.
+
+## Mission
+
+Bloquera exists to make crypto simple, clear, and accessible for everyone. We believe that understanding Bitcoin and blockchain should not feel overwhelming or technical, but instead be a calm and guided learning journey. Our goal is to break down complex ideas into easy steps, so anyone can learn with confidence.
+
+We are building a space where curiosity is welcomed and learning happens at your own pace. With structured lessons and helpful guidance, Bloquera helps people move from confusion to clarity, empowering them to make smarter and safer decisions in the world of crypto.
 
 ## Local Development
 
